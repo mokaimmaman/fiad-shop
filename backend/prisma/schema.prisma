@@ -1,0 +1,484 @@
+// Fiad Shop — Prisma schema
+// Datasource: PostgreSQL (Supabase). All timestamps in UTC.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// USERS & AUTH
+// -----------------------------------------------------------------------------
+
+enum Role {
+  USER
+  AFFILIATE
+  MODERATOR
+  ADMIN
+}
+
+enum AffiliateLevel {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+}
+
+enum AffiliateType {
+  REGULAR
+  INFLUENCER
+}
+
+enum AffiliateStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  displayName   String
+  username      String   @unique
+  role          Role     @default(USER)
+
+  // Email verification
+  isVerified    Boolean  @default(false)
+  otpCode       String?
+  otpExpiresAt  DateTime?
+
+  // Password reset
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  // 2FA (TOTP via speakeasy)
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean @default(false)
+
+  // Relations
+  orders             Order[]
+  affiliate          Affiliate?
+  feedbacks          Feedback[]
+  coupons            Coupon[]           @relation("CouponOwner")
+  supportSessions    LiveSupportSession[] @relation("SessionUser")
+  handledSessions    LiveSupportSession[] @relation("SessionAdmin")
+  notifications      Notification[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@index([username])
+}
+
+// -----------------------------------------------------------------------------
+// PRODUCTS
+// -----------------------------------------------------------------------------
+
+model Product {
+  id                String   @id @default(cuid())
+  sku               String   @unique
+  pid               String   // CJ Dropshipping PID
+  name              String
+  description       String   @db.Text
+  category          String
+  basePrice         Decimal  @db.Decimal(10, 2)
+  images            Json     // string[]
+  affiliateCommission Decimal @db.Decimal(5, 2) @default(0) // percent
+  isProMode         Boolean  @default(false)
+  isPackage         Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  stock             Int      @default(0)
+
+  variants          ProductVariant[]
+  packageItems      PackageItem[]    @relation("PackageParent")
+  inPackages        PackageItem[]    @relation("PackageChild")
+  orderItems        OrderItem[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([category])
+  @@index([sku])
+}
+
+model ProductVariant {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  color         String?
+  size          String?
+  material      String?
+  priceOverride Decimal? @db.Decimal(10, 2)
+  stock         Int      @default(0)
+
+  @@index([productId])
+}
+
+model PackageItem {
+  id             String  @id @default(cuid())
+  packageId      String
+  package        Product @relation("PackageParent", fields: [packageId], references: [id], onDelete: Cascade)
+  childProductId String
+  childProduct   Product @relation("PackageChild", fields: [childProductId], references: [id])
+  quantity       Int     @default(1)
+
+  @@index([packageId])
+}
+
+// -----------------------------------------------------------------------------
+// ORDERS
+// -----------------------------------------------------------------------------
+
+enum OrderStatus {
+  PENDING           // awaiting payment
+  PAID              // payment confirmed by webhook
+  APPROVED          // admin approved & forwarded to CJ
+  SHIPPED           // tracking number added
+  DELIVERED
+  REJECTED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  userId            String?
+  user              User?       @relation(fields: [userId], references: [id])
+
+  // Guest email captured in shippingAddress but also stored here for lookup
+  guestEmail        String?
+
+  items             OrderItem[]
+  subtotal          Decimal     @db.Decimal(10, 2)
+  discountAmount    Decimal     @db.Decimal(10, 2) @default(0)
+  shippingAmount    Decimal     @db.Decimal(10, 2) @default(0)
+  total             Decimal     @db.Decimal(10, 2)
+
+  status            OrderStatus @default(PENDING)
+  shippingAddress   Json        // { fullName, email, phone, line1, line2, city, state, country, postalCode }
+
+  // Promo / affiliate attribution
+  promoCode         String?
+  affiliateId       String?
+  affiliate         Affiliate?  @relation(fields: [affiliateId], references: [id])
+  couponId          String?
+  coupon            Coupon?     @relation(fields: [couponId], references: [id])
+
+  // Payment
+  paymentProvider   String?     // NOWPAYMENTS
+  paymentInvoiceId  String?
+  paymentStatus     String?     // waiting, confirming, finished, failed, expired
+  paidAt            DateTime?
+
+  // Fulfillment / CJ
+  cjOrderId         String?
+  trackingNumber    String?
+  trackingCarrier   String?
+  shippedAt         DateTime?
+  deliveredAt       DateTime?
+
+  adminNotes        String?
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([affiliateId])
+  @@index([guestEmail])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id])
+  variantJson  Json?   // snapshot of chosen variant { color, size, material }
+  sku          String
+  name         String
+  unitPrice    Decimal @db.Decimal(10, 2)
+  quantity     Int
+  lineTotal    Decimal @db.Decimal(10, 2)
+
+  @@index([orderId])
+}
+
+// -----------------------------------------------------------------------------
+// AFFILIATE
+// -----------------------------------------------------------------------------
+
+model Affiliate {
+  id            String          @id @default(cuid())
+  userId        String          @unique
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level         AffiliateLevel  @default(BRONZE)
+  type          AffiliateType   @default(REGULAR)
+  status        AffiliateStatus @default(ACTIVE)
+
+  // Custom promo code (may only be set once by affiliate; admin can override)
+  promoCode     String?         @unique
+  promoCodeLocked Boolean       @default(false)
+
+  // Commission override (percent). If null, per-product commission applies.
+  commissionRate Decimal?       @db.Decimal(5, 2)
+
+  totalSales    Int             @default(0)
+  totalEarned   Decimal         @db.Decimal(12, 2) @default(0)
+  balance       Decimal         @db.Decimal(12, 2) @default(0)
+
+  orders        Order[]
+  withdrawals   Withdrawal[]
+  discountLinks DiscountLink[]
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  PAID
+  REJECTED
+}
+
+model Withdrawal {
+  id           String           @id @default(cuid())
+  affiliateId  String
+  affiliate    Affiliate        @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  amount       Decimal          @db.Decimal(12, 2)
+  method       String           // e.g. USDT_TRC20, BANK, PAYPAL
+  destination  String           // wallet address / account details
+  status       WithdrawalStatus @default(PENDING)
+  adminNote    String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+// Affiliate-created discount links: they give up part of their commission
+// as a discount to the buyer.
+model DiscountLink {
+  id             String    @id @default(cuid())
+  affiliateId    String
+  affiliate      Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  code           String    @unique
+  discountPercent Decimal  @db.Decimal(5, 2) // percent given to buyer
+  affiliateKeepPercent Decimal @db.Decimal(5, 2) // percent affiliate keeps
+  uses           Int       @default(0)
+  maxUses        Int?
+  expiresAt      DateTime?
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// COUPONS (admin-issued, e.g. for Macro feedback rewards)
+// -----------------------------------------------------------------------------
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+model Coupon {
+  id            String     @id @default(cuid())
+  code          String     @unique
+  type          CouponType @default(PERCENT)
+  value         Decimal    @db.Decimal(10, 2)
+  ownerUserId   String?
+  owner         User?      @relation("CouponOwner", fields: [ownerUserId], references: [id])
+  reason        String?    // e.g. "Macro feedback reward"
+  uses          Int        @default(0)
+  maxUses       Int?       @default(1)
+  expiresAt     DateTime?
+  isActive      Boolean    @default(true)
+  orders        Order[]
+  createdAt     DateTime   @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// FEEDBACK (Earn With Us)
+// -----------------------------------------------------------------------------
+
+enum FeedbackType {
+  SUGGESTION
+  SOFTWARE_BUG
+  SECURITY_BUG
+}
+
+enum FeedbackLevel {
+  UNSET
+  MICRO
+  MACRO
+}
+
+enum FeedbackStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
+}
+
+model Feedback {
+  id          String         @id @default(cuid())
+  userId      String?
+  user        User?          @relation(fields: [userId], references: [id])
+  guestEmail  String?
+  type        FeedbackType
+  levelRequested FeedbackLevel @default(UNSET) // what user requested
+  level       FeedbackLevel  @default(UNSET)   // what admin decided
+  title       String
+  description String         @db.Text
+  imageUrl    String?
+  status      FeedbackStatus @default(PENDING)
+  adminNote   String?
+  couponId    String?
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([status])
+  @@index([userId])
+}
+
+// -----------------------------------------------------------------------------
+// AI KNOWLEDGE BASE
+// -----------------------------------------------------------------------------
+
+model AIKnowledge {
+  id         String   @id @default(cuid())
+  category   String   // shipping, returns, products, general, payment
+  question   String   @db.Text
+  answer     String   @db.Text
+  keywords   Json     // string[] used for fuzzy match
+  isActive   Boolean  @default(true)
+  priority   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category])
+}
+
+model AIChatLog {
+  id         String   @id @default(cuid())
+  sessionId  String
+  userId     String?
+  question   String   @db.Text
+  answer     String   @db.Text
+  source     String   // KB or MISTRAL
+  createdAt  DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+// -----------------------------------------------------------------------------
+// EMAIL PROVIDERS (admin-managed failover chain)
+// -----------------------------------------------------------------------------
+
+model EmailProvider {
+  id         String   @id @default(cuid())
+  name       String   // e.g. "Brevo", "Sendpulse"
+  kind       String   // BREVO | SENDPULSE | SMTP
+  // For SMTP-style providers
+  host       String?
+  port       Int?
+  secure     Boolean  @default(true)
+  authUser   String?
+  authPass   String?
+  // For API-based providers (Brevo, Sendpulse)
+  apiKey     String?
+  apiSecret  String?
+  fromEmail  String   @default("support@fiad.shop")
+  fromName   String   @default("Fiad Shop")
+  priority   Int      @default(100) // lower = higher priority
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([priority])
+}
+
+// -----------------------------------------------------------------------------
+// LIVE SUPPORT (Ably)
+// -----------------------------------------------------------------------------
+
+enum SupportStatus {
+  ACTIVE
+  WAITING
+  CLOSED
+}
+
+model LiveSupportSession {
+  id          String        @id @default(cuid())
+  userId      String?
+  user        User?         @relation("SessionUser", fields: [userId], references: [id])
+  email       String
+  status      SupportStatus @default(WAITING)
+  adminId     String?
+  admin       User?         @relation("SessionAdmin", fields: [adminId], references: [id])
+  channel     String        // Ably channel name for this session
+  messages    Json          // [{ sender: 'user'|'admin'|'system', message, timestamp }]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+}
+
+model SupportSettings {
+  id            String   @id @default(cuid())
+  isLiveEnabled Boolean  @default(false)
+  offlineMessage String  @default("Our team is currently offline. Please leave a message and we'll get back to you within 24 hours.")
+  updatedAt     DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// SETTINGS (key-value store; used for homepage featured products, etc.)
+// -----------------------------------------------------------------------------
+
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// NOTIFICATIONS (in-app)
+// -----------------------------------------------------------------------------
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+// -----------------------------------------------------------------------------
+// AUDIT LOG
+// -----------------------------------------------------------------------------
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  target    String?
+  metadata  Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([action])
+}
