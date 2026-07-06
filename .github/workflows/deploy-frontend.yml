@@ -1,0 +1,81 @@
+# ============================================================================
+# Fiad Shop — GitHub Pages deploy (frontend only)
+# ----------------------------------------------------------------------------
+# Publishes the /frontend directory to GitHub Pages on every push to main.
+# It injects your backend API URL from the repository secret FIAD_API_BASE
+# into frontend/js/config.js before publishing, so you don't have to edit
+# that file by hand.
+#
+# Setup (one-time):
+#   1. Repo → Settings → Pages → Source: "GitHub Actions"
+#   2. Repo → Settings → Secrets and variables → Actions → New repository secret
+#         Name:  FIAD_API_BASE
+#         Value: https://YOUR-VERCEL-APP.vercel.app/api
+#   3. Push to main. The workflow will build & publish, then the site appears
+#      at https://YOUR-USERNAME.github.io/YOUR-REPO/
+# ============================================================================
+
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inject API_BASE into config.js
+        env:
+          API_BASE: ${{ secrets.FIAD_API_BASE }}
+        run: |
+          if [ -z "$API_BASE" ]; then
+            echo "⚠️  FIAD_API_BASE secret is empty — frontend will default to same-origin /api."
+            echo "    (Set it under Settings → Secrets → Actions to point at your Vercel URL.)"
+          else
+            echo "🔧 Injecting API_BASE=$API_BASE into frontend/js/config.js"
+            # POSIX-safe replacement of API_BASE: '...' with the real URL
+            sed -i "s|API_BASE: *'[^']*'|API_BASE: '${API_BASE}'|" frontend/js/config.js
+            grep 'API_BASE:' frontend/js/config.js
+          fi
+
+      - name: Add SPA-friendly 404 fallback
+        run: |
+          # GitHub Pages doesn't rewrite unknown paths — a 404.html that
+          # mirrors index.html keeps deep links working.
+          cp frontend/index.html frontend/404.html || true
+
+      - name: Add .nojekyll (skip Jekyll processing)
+        run: touch frontend/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
