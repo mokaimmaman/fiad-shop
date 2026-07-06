@@ -1,0 +1,666 @@
+{
+  "info": {
+    "name": "Fiad Shop API",
+    "description": "Complete API surface for the Fiad Shop backend. Set the `baseUrl` collection variable to your local or Vercel URL (e.g. http://localhost:4000 or https://your-app.vercel.app). After logging in, the login/register requests automatically save `token` (and `adminToken`) into collection variables — every authenticated request then uses `{{token}}` in the Authorization header.\n\n**Auth cheat sheet:**\n- `{{token}}` — customer/affiliate JWT\n- `{{adminToken}}` — admin JWT (separate slot so you can hold both simultaneously)\n- `{{orderNumber}}` — auto-set after creating an order\n- `{{productId}}` — auto-set after listing products",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",     "value": "http://localhost:4000", "type": "string" },
+    { "key": "token",       "value": "",                        "type": "string" },
+    { "key": "adminToken",  "value": "",                        "type": "string" },
+    { "key": "orderNumber", "value": "",                        "type": "string" },
+    { "key": "productId",   "value": "",                        "type": "string" },
+    { "key": "sessionId",   "value": "",                        "type": "string" },
+    { "key": "affiliateId", "value": "",                        "type": "string" },
+    { "key": "feedbackId",  "value": "",                        "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        { "name": "Root",   "request": { "method": "GET", "url": "{{baseUrl}}/" } },
+        { "name": "Health", "request": { "method": "GET", "url": "{{baseUrl}}/api/health" } }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.devOtp) { pm.collectionVariables.set('lastOtp', j.devOtp); console.log('devOtp:', j.devOtp); }"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"user1@example.com\",\n  \"password\": \"Password123!\",\n  \"displayName\": \"Alice Example\"\n}" }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.token) pm.collectionVariables.set('token', j.token);"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/verify-otp",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"user1@example.com\",\n  \"otp\": \"{{lastOtp}}\"\n}" }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/resend-otp",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\": \"user1@example.com\" }" }
+          }
+        },
+        {
+          "name": "Login (user)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.token) pm.collectionVariables.set('token', j.token);"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"user1@example.com\",\n  \"password\": \"Password123!\"\n}" }
+          }
+        },
+        {
+          "name": "Login (admin) — saves to {{adminToken}}",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.token) pm.collectionVariables.set('adminToken', j.token);"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@fiad.shop\",\n  \"password\": \"ChangeMe123!\"\n}" }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/forgot-password",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\": \"user1@example.com\" }" }
+          }
+        },
+        {
+          "name": "Reset password",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/reset-password",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"PASTE_RESET_TOKEN_FROM_EMAIL\",\n  \"password\": \"NewPassword456!\"\n}" }
+          }
+        },
+        {
+          "name": "2FA — setup",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/2fa/setup",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "2FA — verify & enable",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/2fa/verify-enable",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"code\": \"123456\" }" }
+          }
+        },
+        {
+          "name": "2FA — disable",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/auth/2fa/disable",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products (public)",
+      "item": [
+        {
+          "name": "List",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.items && j.items[0]) pm.collectionVariables.set('productId', j.items[0].id);"
+          ]}}],
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/products?limit=24" }
+        },
+        { "name": "Detail",  "request": { "method": "GET", "url": "{{baseUrl}}/api/products/{{productId}}" } },
+        { "name": "By SKU",  "request": { "method": "GET", "url": "{{baseUrl}}/api/products/by-sku/FIAD-TSHIRT-001" } },
+        { "name": "Search",  "request": { "method": "GET", "url": "{{baseUrl}}/api/products?q=shirt&sort=price-asc" } },
+        { "name": "Homepage",   "request": { "method": "GET", "url": "{{baseUrl}}/api/settings/homepage" } },
+        { "name": "Categories", "request": { "method": "GET", "url": "{{baseUrl}}/api/settings/categories" } },
+        { "name": "Support status", "request": { "method": "GET", "url": "{{baseUrl}}/api/settings/support-status" } }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create (guest or user)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.order?.orderNumber) pm.collectionVariables.set('orderNumber', j.order.orderNumber);"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/orders/create",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"items\": [\n    { \"productId\": \"{{productId}}\", \"quantity\": 1 }\n  ],\n  \"shippingAddress\": {\n    \"fullName\": \"Alice Example\",\n    \"email\": \"alice@example.com\",\n    \"phone\": \"+15551234567\",\n    \"line1\": \"123 Main St\",\n    \"city\": \"New York\",\n    \"country\": \"United States\",\n    \"postalCode\": \"10001\"\n  },\n  \"promoCode\": null\n}" }
+          }
+        },
+        {
+          "name": "My orders",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/orders/mine",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Track (guest — needs email)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/orders/{{orderNumber}}/track?email=alice@example.com" }
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        { "name": "Invoice status", "request": { "method": "GET", "url": "{{baseUrl}}/api/payment/status/INVOICE_ID" } }
+      ]
+    },
+    {
+      "name": "Affiliate",
+      "item": [
+        {
+          "name": "Apply (any authed user)",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/affiliate/apply",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/affiliate/dashboard",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Set promo code (once)",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/affiliate/promo-code",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"code\": \"ALICE10\" }" }
+          }
+        },
+        {
+          "name": "Create discount link",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/affiliate/discount-link",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"discountPercent\": 5, \"maxUses\": 100 }" }
+          }
+        },
+        {
+          "name": "List discount links",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/affiliate/discount-links",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Request withdrawal",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/affiliate/withdraw",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"amount\": 25.00, \"method\": \"USDT_TRC20\", \"destination\": \"TQ...wallet\" }" }
+          }
+        },
+        {
+          "name": "List withdrawals",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/affiliate/withdrawals",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feedback",
+      "item": [
+        {
+          "name": "Submit",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.feedback?.id) pm.collectionVariables.set('feedbackId', j.feedback.id);"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/feedback",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"type\": \"SUGGESTION\",\n  \"levelRequested\": \"MICRO\",\n  \"title\": \"Add dark mode to product cards\",\n  \"description\": \"The product cards on /products don't respect the site's dark mode toggle — the borders stay light.\",\n  \"guestEmail\": \"reporter@example.com\"\n}" }
+          }
+        },
+        {
+          "name": "My feedback",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/feedback/mine",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "item": [
+        {
+          "name": "Chat",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/ai/chat",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"pm-test-1\",\n  \"message\": \"How long does shipping take?\"\n}" }
+          }
+        },
+        { "name": "KB list", "request": { "method": "GET", "url": "{{baseUrl}}/api/ai/kb" } }
+      ]
+    },
+    {
+      "name": "Support (chat)",
+      "item": [
+        { "name": "Status", "request": { "method": "GET", "url": "{{baseUrl}}/api/support/status" } },
+        {
+          "name": "Open session",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "const j = pm.response.json();",
+            "if (j.sessionId) pm.collectionVariables.set('sessionId', j.sessionId);"
+          ]}}],
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/support/session",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\": \"visitor@example.com\" }" }
+          }
+        },
+        {
+          "name": "Send message",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/support/session/{{sessionId}}/message",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"sender\": \"user\", \"message\": \"Hello, is anyone there?\" }" }
+          }
+        },
+        { "name": "Get session",  "request": { "method": "GET", "url": "{{baseUrl}}/api/support/session/{{sessionId}}" } },
+        { "name": "Customer token", "request": { "method": "GET", "url": "{{baseUrl}}/api/support/token?sessionId={{sessionId}}" } },
+        {
+          "name": "Admin token",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/support/admin/token",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Admin — list sessions",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/support/admin/sessions?status=ALL",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Admin — join session",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/support/admin/session/{{sessionId}}/join",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Admin — close session",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/support/admin/session/{{sessionId}}/close",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Dashboard",
+      "item": [
+        {
+          "name": "Overview",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/dashboard",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Products",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/products",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/products",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"sku\": \"FIAD-NEW-001\",\n  \"pid\": \"CJ-NEW-001\",\n  \"name\": \"New Test Product\",\n  \"description\": \"A test product created via API.\",\n  \"category\": \"Test\",\n  \"basePrice\": 29.99,\n  \"images\": [\"https://picsum.photos/600\"],\n  \"affiliateCommission\": 10,\n  \"stock\": 25,\n  \"variants\": [\n    { \"color\": \"Black\", \"size\": \"M\", \"stock\": 10 },\n    { \"color\": \"White\", \"size\": \"L\", \"stock\": 15 }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/products/{{productId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"basePrice\": 34.99, \"isActive\": true }" }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/admin/products/{{productId}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Orders",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/orders",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Detail",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/orders/ORDER_ID",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Approve (returns CJ forward data)",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/orders/ORDER_ID/approve",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Reject",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/orders/ORDER_ID/reject",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"reason\": \"Out of stock\" }" }
+          }
+        },
+        {
+          "name": "Ship (adds tracking + emails customer)",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/orders/ORDER_ID/ship",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"trackingNumber\": \"LX123456789CN\", \"trackingCarrier\": \"Yun Express\" }" }
+          }
+        },
+        {
+          "name": "Mark delivered",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/orders/ORDER_ID/deliver",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Affiliates",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/affiliates",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/affiliates/AFFILIATE_ID",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"level\": \"GOLD\", \"commissionRate\": 15, \"status\": \"ACTIVE\" }" }
+          }
+        },
+        {
+          "name": "List withdrawals",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/withdrawals",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Set withdrawal status",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/withdrawals/WITHDRAWAL_ID/status",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"PAID\", \"adminNote\": \"Sent 2026-07-05\" }" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Feedback",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/feedback",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Review (mark MACRO + generate coupon)",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/feedback/{{feedbackId}}/review",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"level\": \"MACRO\",\n  \"status\": \"ACCEPTED\",\n  \"adminNote\": \"Great catch — reproduced and fixed.\",\n  \"generateCoupon\": true,\n  \"couponType\": \"PERCENT\",\n  \"couponValue\": 25\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — AI Knowledge",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/ai-knowledge",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/ai-knowledge",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"category\": \"shipping\",\n  \"question\": \"Do you ship internationally?\",\n  \"answer\": \"Yes! We ship worldwide. Standard delivery is 7–15 business days.\",\n  \"keywords\": [\"international\", \"worldwide\", \"country\", \"global\"],\n  \"priority\": 20\n}" }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/ai-knowledge/KB_ID",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"priority\": 30 }" }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/admin/ai-knowledge/KB_ID",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Email Providers",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/email-providers",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Create (Brevo)",
+          "request": {
+            "method": "POST", "url": "{{baseUrl}}/api/admin/email-providers",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Brevo (primary)\",\n  \"kind\": \"BREVO\",\n  \"apiKey\": \"YOUR_BREVO_API_KEY\",\n  \"fromName\": \"Fiad Shop\",\n  \"fromEmail\": \"support@fiad.shop\",\n  \"priority\": 10\n}" }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/email-providers/PROVIDER_ID",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"priority\": 5 }" }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE", "url": "{{baseUrl}}/api/admin/email-providers/PROVIDER_ID",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Support Settings",
+      "item": [
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/support-settings",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Toggle live support ON",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/support-settings",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"isLiveEnabled\": true }" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin — Homepage & Users",
+      "item": [
+        {
+          "name": "Homepage — get selection",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/settings/homepage",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Homepage — set selection",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/settings/homepage",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"ids\": [\"{{productId}}\"] }" }
+          }
+        },
+        {
+          "name": "Users — list",
+          "request": {
+            "method": "GET", "url": "{{baseUrl}}/api/admin/users",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          }
+        },
+        {
+          "name": "Users — change role",
+          "request": {
+            "method": "PUT", "url": "{{baseUrl}}/api/admin/users/USER_ID/role",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"role\": \"MODERATOR\" }" }
+          }
+        }
+      ]
+    }
+  ]
+}
