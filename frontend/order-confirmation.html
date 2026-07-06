@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Fiad Shop</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { cta: { 500: '#f97316', 600: '#ea580c' } } } } }</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .checkmark-circle { animation: checkmark 0.6s ease-out; }
+        @keyframes checkmark { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+        .confetti-piece { position: absolute; width: 8px; height: 8px; border-radius: 50%; animation: confetti-fall 2s ease-out forwards; }
+        @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(200px) rotate(720deg); opacity: 0; } }
+        .price-tag { color: #ea580c; }
+        .dark .price-tag { color: #fb923c; }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col min-h-screen">
+
+    <div class="container mx-auto px-3 py-4">
+        <a href="index.html" class="text-xl font-bold"><span class="text-cta-500 dark:text-cta-400">FIAD</span><span class="text-gray-900 dark:text-white">SHOP</span></a>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center px-3">
+        <div class="max-w-md w-full text-center relative">
+            <div class="absolute inset-0 pointer-events-none overflow-hidden" id="confetti-container"></div>
+            <div class="checkmark-circle w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-green-500 text-3xl"></i>
+            </div>
+            <h1 class="text-xl font-bold mb-2">Order Confirmed!</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Thank you for your purchase. Your order has been placed successfully.</p>
+            <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg p-4 text-left mb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Order Number</span>
+                    <span class="text-sm font-bold text-cta-500">#FIAD-<span id="order-number"></span></span>
+                </div>
+                <div class="border-t border-gray-200 dark:border-zinc-800 pt-3 space-y-2 text-sm">
+                    <div class="flex justify-between"><span class="text-gray-500">Total Paid</span><span id="order-total" class="font-bold price-tag">$0.00</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Payment Status</span><span class="text-green-600 dark:text-green-400 font-medium"><i class="fa-solid fa-circle-check mr-1"></i>Paid</span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Estimated Delivery</span><span class="font-medium">5-7 business days</span></div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                <a href="order-tracking.html" class="bg-cta-500 hover:bg-cta-600 text-white px-6 py-3 rounded-lg text-sm font-bold transition shadow-lg shadow-cta-500/25"><i class="fa-solid fa-truck mr-2"></i>Track Order</a>
+                <a href="products.html" class="bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 text-gray-800 dark:text-gray-200 px-6 py-3 rounded-lg text-sm font-bold hover:bg-gray-50 dark:hover:bg-zinc-700 transition"><i class="fa-solid fa-bag-shopping mr-2"></i>Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-4 text-center"><p class="text-gray-400 dark:text-gray-500 text-[10px]">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p></footer>
+
+    <script>
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+            // FIAD SHOP: prefer ?order=… from payment redirect, else the last-order snapshot
+            try {
+                const params = new URLSearchParams(location.search);
+                const paramOrder = params.get('order');
+                const last = JSON.parse(localStorage.getItem('fiad_last_order') || 'null');
+                const ordersLegacy = JSON.parse(localStorage.getItem('fiad_orders') || '[]');
+                const num = paramOrder || last?.orderNumber || ordersLegacy[0]?.id;
+                const tot = last?.total ?? ordersLegacy[0]?.total ?? 0;
+                if (num) {
+                    // The template renders "#FIAD-<span>...</span>" — strip our FS- prefix so it doesn't double up.
+                    const clean = String(num).replace(/^FIAD-/i, '').replace(/^FS-/i, '');
+                    document.getElementById('order-number').textContent = clean;
+                }
+                document.getElementById('order-total').textContent = '$' + Number(tot || 0).toFixed(2);
+                // If we have a guest email, attach a personalised tracking link
+                if (last?.email) {
+                    const track = document.querySelector('a[href="order-tracking.html"]');
+                    if (track) track.href = 'order-tracking.html?order=' + encodeURIComponent(last.orderNumber) +
+                                             '&email=' + encodeURIComponent(last.email);
+                } else if (paramOrder) {
+                    const track = document.querySelector('a[href="order-tracking.html"]');
+                    if (track) track.href = 'order-tracking.html?order=' + encodeURIComponent(paramOrder);
+                }
+            } catch(e) {
+                document.getElementById('order-number').textContent = Math.random().toString(36).substring(2, 8).toUpperCase();
+            }
+            const container = document.getElementById('confetti-container');
+            const colors = ['#f97316', '#22c55e', '#3b82f6', '#eab308', '#ec4899', '#8b5cf6'];
+            for (let i = 0; i < 30; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.top = Math.random() * 40 + 10 + '%';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = Math.random() * 0.5 + 's';
+                piece.style.width = Math.random() * 6 + 4 + 'px';
+                piece.style.height = Math.random() * 6 + 4 + 'px';
+                container.appendChild(piece);
+            }
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

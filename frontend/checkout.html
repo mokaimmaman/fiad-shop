@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Fiad Shop</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { cta: { 500: '#f97316', 600: '#ea580c' } } } } }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .price-tag { color: #ea580c; }
+        .dark .price-tag { color: #fb923c; }
+        .toast { animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <div class="bg-white dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800 py-3 px-3">
+        <div class="container mx-auto flex items-center justify-between">
+            <a href="index.html" class="text-xl font-bold"><span class="text-cta-500">FIAD</span><span class="text-gray-900 dark:text-white">SHOP</span></a>
+            <div class="flex items-center gap-1 text-xs text-gray-400">
+                <span class="text-cta-500 font-bold">Cart</span>
+                <i class="fa-solid fa-chevron-right mx-1"></i>
+                <span class="text-cta-500 font-bold">Checkout</span>
+                <i class="fa-solid fa-chevron-right mx-1"></i>
+                <span class="text-gray-300">Confirmation</span>
+            </div>
+            <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-3 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg p-4">
+                    <h3 class="font-bold text-sm mb-4"><i class="fa-solid fa-truck mr-2 text-cta-500"></i>Shipping Information</h3>
+                    <form id="shipping-form" class="grid grid-cols-2 gap-3" novalidate>
+                        <div class="col-span-2 sm:col-span-1"><label class="text-xs font-medium mb-1 block">First Name *</label><input id="ship-first" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="John" required></div>
+                        <div class="col-span-2 sm:col-span-1"><label class="text-xs font-medium mb-1 block">Last Name *</label><input id="ship-last" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="Doe" required></div>
+                        <div class="col-span-2"><label class="text-xs font-medium mb-1 block">Email *</label><input id="ship-email" type="email" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="john@example.com" required></div>
+                        <div class="col-span-2"><label class="text-xs font-medium mb-1 block">Phone *</label><input id="ship-phone" type="tel" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="+1 (555) 123-4567" required></div>
+                        <div class="col-span-2"><label class="text-xs font-medium mb-1 block">Address *</label><input id="ship-line1" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="123 Main Street" required></div>
+                        <div class="col-span-2 sm:col-span-1"><label class="text-xs font-medium mb-1 block">City *</label><input id="ship-city" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="New York" required></div>
+                        <div class="col-span-2 sm:col-span-1"><label class="text-xs font-medium mb-1 block">ZIP Code *</label><input id="ship-zip" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="10001" required></div>
+                        <div class="col-span-2"><label class="text-xs font-medium mb-1 block">Country *</label>
+                            <select id="ship-country" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                                <option>United States</option><option>Canada</option><option>United Kingdom</option><option>Bangladesh</option><option>India</option>
+                                <option>Germany</option><option>France</option><option>Australia</option><option>Japan</option><option>Brazil</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-xs font-medium mb-1 block">Promo / Affiliate Code <span class="text-gray-400 font-normal">(optional)</span></label>
+                            <input id="promo-code" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none uppercase" placeholder="ENTER CODE">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg p-4">
+                    <h3 class="font-bold text-sm mb-4"><i class="fa-solid fa-credit-card mr-2 text-cta-500"></i>Payment Method</h3>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="payment-method border-2 border-cta-500 rounded-lg p-3 text-center bg-cta-50 dark:bg-cta-900/20">
+                            <i class="fa-brands fa-bitcoin text-cta-500 text-lg"></i>
+                            <p class="text-xs font-medium mt-1">Crypto</p>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5">BTC · ETH · USDT · +40</p>
+                        </div>
+                        <div class="payment-method border-2 border-cta-500 rounded-lg p-3 text-center bg-cta-50 dark:bg-cta-900/20">
+                            <i class="fa-regular fa-credit-card text-cta-500 text-lg"></i>
+                            <p class="text-xs font-medium mt-1">Hawala Visa</p>
+                            <p class="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5">Card via NOWPayments</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 text-[11px] text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-zinc-950 rounded-lg p-3 border border-gray-100 dark:border-zinc-800">
+                        <i class="fa-solid fa-shield-halved text-cta-500 mt-0.5"></i>
+                        <span>You'll be redirected to <b>NOWPayments</b> to complete your payment securely. Fiad Shop never sees your card or wallet details.</span>
+                    </div>
+                </div>
+
+                <button id="place-order-btn" class="w-full bg-cta-500 hover:bg-cta-600 text-white py-3 rounded-lg text-sm font-bold transition shadow-lg shadow-cta-500/25"><i class="fa-solid fa-lock mr-2"></i>Place Order - $<span id="order-total-display">0.00</span></button>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg p-4 sticky top-24">
+                    <h3 class="font-bold text-sm mb-3">Order Summary</h3>
+                    <div id="checkout-items" class="space-y-2 mb-3"></div>
+                    <div class="border-t border-gray-200 dark:border-zinc-800 pt-3 space-y-2 text-sm">
+                        <div class="flex justify-between"><span class="text-gray-500">Subtotal</span><span id="checkout-subtotal" class="font-medium">$0.00</span></div>
+                        <div class="flex justify-between"><span class="text-gray-500">Shipping</span><span id="checkout-shipping" class="font-medium text-green-600">Free</span></div>
+                        <div class="flex justify-between"><span class="text-gray-500">Tax (8%)</span><span id="checkout-tax" class="font-medium">$0.00</span></div>
+                        <div class="border-t border-gray-200 dark:border-zinc-800 pt-2 flex justify-between font-bold"><span>Total</span><span id="checkout-total" class="price-tag text-lg">$0.00</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-4 text-center"><p class="text-gray-400 dark:text-gray-500 text-[10px]">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p></footer>
+
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            function setTheme(t) { if (t === 'dark') { htmlElement.classList.add('dark'); themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); } else { htmlElement.classList.remove('dark'); themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); } localStorage.setItem('theme', t); }
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(htmlElement.classList.contains('dark') ? 'light' : 'dark'));
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') setTheme('dark'); else if (savedTheme === 'light') setTheme('light'); else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            function getCart() { try { return JSON.parse(localStorage.getItem('fiad_cart')) || []; } catch { return []; } }
+            function showToast(msg) { const c = document.getElementById('toast-container'); if (!c) return; const t = document.createElement('div'); t.className = 'toast bg-white dark:bg-zinc-900 border border-gray-200 rounded-lg shadow-lg px-4 py-3 flex items-center gap-2 text-sm'; t.innerHTML = '<i class="fa-solid fa-check-circle text-green-500"></i><span>' + msg + '</span>'; c.appendChild(t); setTimeout(() => t.remove(), 3000); }
+
+            function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
+
+            function updateCheckout() {
+                const cart = getCart();
+                const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+                const shipping = subtotal >= 50 ? 0 : 5.99;
+                const tax = subtotal * 0.08;
+                const total = subtotal + shipping + tax;
+
+                const itemsContainer = document.getElementById('checkout-items');
+                if (itemsContainer) { itemsContainer.innerHTML = cart.map(item => '<div class="flex justify-between items-center text-sm"><div class="flex-1 min-w-0"><span class="truncate block text-xs">' + escapeHtml(item.name) + ' <span class="text-gray-400">x' + item.quantity + '</span></span></div><span class="font-medium text-xs">$' + (item.price * item.quantity).toFixed(2) + '</span></div>').join(''); }
+
+                document.getElementById('checkout-subtotal').textContent = '$' + subtotal.toFixed(2);
+                document.getElementById('checkout-shipping').textContent = shipping === 0 ? 'Free' : '$' + shipping.toFixed(2);
+                document.getElementById('checkout-shipping').className = shipping === 0 ? 'font-medium text-green-600 dark:text-green-400' : 'font-medium';
+                document.getElementById('checkout-tax').textContent = '$' + tax.toFixed(2);
+                document.getElementById('checkout-total').textContent = '$' + total.toFixed(2);
+                document.getElementById('order-total-display').textContent = total.toFixed(2);
+            }
+
+            // ---- FIAD SHOP: real order submission ----------------------------------
+            // Pre-fill promo from URL ?ref=... if present
+            (function prefillPromoFromUrl() {
+                const params = new URLSearchParams(location.search);
+                const ref = params.get('ref') || localStorage.getItem('fiad_ref');
+                const input = document.getElementById('promo-code');
+                if (ref && input && !input.value) input.value = ref.toUpperCase();
+            })();
+
+            // Pre-fill email if the user is logged in
+            (function prefillEmail() {
+                const u = window.FiadAuth?.getUser();
+                if (u?.email) {
+                    const e = document.getElementById('ship-email');
+                    if (e && !e.value) e.value = u.email;
+                }
+            })();
+
+            function _readShippingAddress() {
+                const first = document.getElementById('ship-first')?.value?.trim() || '';
+                const last  = document.getElementById('ship-last')?.value?.trim()  || '';
+                return {
+                    fullName: (first + ' ' + last).trim() || 'Guest',
+                    email:    document.getElementById('ship-email')?.value?.trim() || '',
+                    phone:    document.getElementById('ship-phone')?.value?.trim() || '',
+                    line1:    document.getElementById('ship-line1')?.value?.trim() || '',
+                    line2:    null,
+                    city:     document.getElementById('ship-city')?.value?.trim() || '',
+                    state:    null,
+                    country:  document.getElementById('ship-country')?.value?.trim() || 'United States',
+                    postalCode: document.getElementById('ship-zip')?.value?.trim() || '',
+                };
+            }
+
+            function _validateAddress(a) {
+                const missing = [];
+                if (!a.fullName || a.fullName === 'Guest') missing.push('name');
+                if (!a.email)   missing.push('email');
+                if (!a.phone)   missing.push('phone');
+                if (!a.line1)   missing.push('address');
+                if (!a.city)    missing.push('city');
+                if (!a.postalCode) missing.push('ZIP');
+                return missing;
+            }
+
+            document.getElementById('place-order-btn')?.addEventListener('click', async function () {
+                const cart = getCart();
+                if (cart.length === 0) { window.FiadAPI.toast('Your cart is empty!', 'warn'); return; }
+                const address = _readShippingAddress();
+                const missing = _validateAddress(address);
+                if (missing.length) {
+                    window.FiadAPI.toast('Please fill: ' + missing.join(', '), 'warn');
+                    return;
+                }
+                this.disabled = true;
+                const origHtml = this.innerHTML;
+                this.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Creating order…';
+
+                const payload = {
+                    items: cart.map(i => ({
+                        productId: String(i.id),
+                        quantity: i.quantity,
+                        variant: i.variant || null,
+                    })),
+                    shippingAddress: address,
+                    promoCode: document.getElementById('promo-code')?.value?.trim() || null,
+                    ref: new URLSearchParams(location.search).get('ref') || null,
+                };
+
+                try {
+                    const res = await window.FiadAPI.api.post('/orders/create', payload);
+                    // Persist a summary for the confirmation page (guest tracking, etc.)
+                    localStorage.setItem('fiad_last_order', JSON.stringify({
+                        orderNumber: res.order.orderNumber,
+                        total: res.order.total,
+                        email: address.email,
+                    }));
+                    localStorage.setItem('fiad_cart', '[]');
+                    if (res.paymentUrl) {
+                        window.FiadAPI.toast('Redirecting to secure payment…', 'success');
+                        setTimeout(() => { location.href = res.paymentUrl; }, 500);
+                    } else {
+                        // No payment provider configured yet — go to confirmation
+                        location.href = 'order-confirmation.html?order=' + encodeURIComponent(res.order.orderNumber);
+                    }
+                } catch (err) {
+                    this.disabled = false;
+                    this.innerHTML = origHtml;
+                    window.FiadAPI.toast(err.message || 'Failed to create order', 'error');
+                }
+            });
+
+            document.querySelectorAll('.payment-method').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(b => { b.classList.remove('border-cta-500', 'bg-cta-50', 'dark:bg-cta-900/20'); b.classList.add('border-gray-200', 'dark:border-zinc-700'); });
+                    this.classList.add('border-cta-500', 'bg-cta-50', 'dark:bg-cta-900/20');
+                    this.classList.remove('border-gray-200', 'dark:border-zinc-700');
+                });
+            });
+
+            updateCheckout();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

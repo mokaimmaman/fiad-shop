@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Earn With Us - Fiad Shop</title>
+    <meta name="description" content="Help improve Fiad Shop and earn rewards. Submit suggestions, software bugs, or security bugs.">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: { 'xs': '480px' },
+                    colors: { cta: { 50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',800:'#9a3412',900:'#7c2d12' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+        .info-card {
+            transition: all 0.25s ease;
+            border: 1px solid #e5e7eb;
+        }
+        .dark .info-card { border-color: #27272a; }
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-color: #f97316;
+        }
+        .dark .info-card:hover { box-shadow: 0 0 15px rgba(249,115,22,0.12); }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html"    class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Products</a>
+                <a href="earn-with-us.html" class="text-cta-500 dark:text-cta-400 border-b-2 border-cta-500 dark:border-cta-400 pb-1">Earn</a>
+                <a href="contact.html"  class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105 focus:outline-none" aria-label="Toggle dark mode">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative cursor-pointer group" aria-label="Shopping cart">
+                    <i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="py-10 md:py-14 px-4 bg-gradient-to-b from-cta-50 to-transparent dark:from-cta-900/20">
+        <div class="container mx-auto max-w-3xl text-center">
+            <span class="inline-block text-[10px] font-bold uppercase tracking-widest text-cta-600 dark:text-cta-400 bg-cta-100 dark:bg-cta-900/40 px-3 py-1 rounded-full mb-3">
+                Rewards program
+            </span>
+            <h1 class="text-2xl md:text-4xl font-bold mb-3">
+                <span class="text-cta-500">Earn</span> with Fiad Shop
+            </h1>
+            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Spot a bug, find a security issue, or have an idea that could make Fiad Shop better?
+                Send it our way. Every accepted submission earns you a coupon reward — the bigger the impact, the bigger the reward.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== MICRO vs MACRO ===== -->
+    <section class="py-6 px-3">
+        <div class="container mx-auto max-w-4xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="info-card bg-white dark:bg-zinc-900 rounded-xl p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-lg bg-cta-100 dark:bg-cta-900/30 text-cta-600 dark:text-cta-400 flex items-center justify-center">
+                            <i class="fa-solid fa-seedling"></i>
+                        </div>
+                        <h3 class="font-bold text-base">Micro</h3>
+                        <span class="ml-auto text-xs font-bold text-green-600 dark:text-green-400">≈ 10% coupon</span>
+                    </div>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Small suggestions, typos, minor bugs, UI polish, or duplicate content reports.
+                        Nice-to-have improvements that don't block anyone.
+                    </p>
+                </div>
+                <div class="info-card bg-white dark:bg-zinc-900 rounded-xl p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-lg bg-cta-100 dark:bg-cta-900/30 text-cta-600 dark:text-cta-400 flex items-center justify-center">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                        <h3 class="font-bold text-base">Macro</h3>
+                        <span class="ml-auto text-xs font-bold text-green-600 dark:text-green-400">≈ 25%+ coupon</span>
+                    </div>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Significant bugs (payments, order flow, account access), security vulnerabilities,
+                        or major UX/feature ideas that materially improve the shop.
+                    </p>
+                </div>
+            </div>
+            <p class="text-[11px] text-gray-500 dark:text-gray-400 text-center mt-3">
+                You can request a level below, but the <b>final classification is made by our team</b> after review.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== FORM ===== -->
+    <section class="py-6 px-3 pb-14">
+        <div class="container mx-auto max-w-2xl">
+            <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 md:p-7">
+                <h2 class="font-bold text-lg mb-1">Submit your idea or report</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">All submissions are reviewed within 3 business days.</p>
+
+                <form id="earn-form" class="space-y-4" novalidate>
+                    <!-- Type -->
+                    <div>
+                        <label class="text-xs font-medium mb-2 block text-gray-700 dark:text-gray-300">Type *</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="type-opt cursor-pointer border-2 border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-center hover:border-cta-500 transition has-[:checked]:border-cta-500 has-[:checked]:bg-cta-50 dark:has-[:checked]:bg-cta-900/20">
+                                <input type="radio" name="type" value="SUGGESTION" class="hidden" checked>
+                                <i class="fa-solid fa-lightbulb text-cta-500 text-lg mb-1"></i>
+                                <p class="text-xs font-semibold">Suggestion</p>
+                            </label>
+                            <label class="type-opt cursor-pointer border-2 border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-center hover:border-cta-500 transition has-[:checked]:border-cta-500 has-[:checked]:bg-cta-50 dark:has-[:checked]:bg-cta-900/20">
+                                <input type="radio" name="type" value="SOFTWARE_BUG" class="hidden">
+                                <i class="fa-solid fa-bug text-cta-500 text-lg mb-1"></i>
+                                <p class="text-xs font-semibold">Software Bug</p>
+                            </label>
+                            <label class="type-opt cursor-pointer border-2 border-gray-200 dark:border-zinc-700 rounded-lg p-3 text-center hover:border-cta-500 transition has-[:checked]:border-cta-500 has-[:checked]:bg-cta-50 dark:has-[:checked]:bg-cta-900/20">
+                                <input type="radio" name="type" value="SECURITY_BUG" class="hidden">
+                                <i class="fa-solid fa-shield-halved text-cta-500 text-lg mb-1"></i>
+                                <p class="text-xs font-semibold">Security Bug</p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Level requested -->
+                    <div>
+                        <label class="text-xs font-medium mb-2 block text-gray-700 dark:text-gray-300">
+                            Requested level <span class="text-gray-400 font-normal">(admin makes final call)</span>
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="level-opt cursor-pointer border-2 border-gray-200 dark:border-zinc-700 rounded-lg p-3 hover:border-cta-500 transition has-[:checked]:border-cta-500 has-[:checked]:bg-cta-50 dark:has-[:checked]:bg-cta-900/20 flex items-center gap-3">
+                                <input type="radio" name="level" value="MICRO" class="hidden" checked>
+                                <i class="fa-solid fa-seedling text-cta-500"></i>
+                                <div>
+                                    <p class="text-xs font-semibold">Micro</p>
+                                    <p class="text-[10px] text-gray-500">Small improvement</p>
+                                </div>
+                            </label>
+                            <label class="level-opt cursor-pointer border-2 border-gray-200 dark:border-zinc-700 rounded-lg p-3 hover:border-cta-500 transition has-[:checked]:border-cta-500 has-[:checked]:bg-cta-50 dark:has-[:checked]:bg-cta-900/20 flex items-center gap-3">
+                                <input type="radio" name="level" value="MACRO" class="hidden">
+                                <i class="fa-solid fa-fire text-cta-500"></i>
+                                <div>
+                                    <p class="text-xs font-semibold">Macro</p>
+                                    <p class="text-[10px] text-gray-500">High impact</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Guest email (only when not logged in) -->
+                    <div id="guest-email-wrap" class="hidden">
+                        <label class="text-xs font-medium mb-1 block text-gray-700 dark:text-gray-300">Your email *</label>
+                        <input id="guest-email" type="email" placeholder="you@example.com"
+                            class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500">
+                        <p class="text-[10px] text-gray-500 mt-1">We'll email your reward coupon here if the submission is accepted.</p>
+                    </div>
+
+                    <!-- Title -->
+                    <div>
+                        <label class="text-xs font-medium mb-1 block text-gray-700 dark:text-gray-300">Title *</label>
+                        <input id="title" type="text" maxlength="160" required placeholder="Short summary of the issue or idea"
+                            class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500">
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="text-xs font-medium mb-1 block text-gray-700 dark:text-gray-300">
+                            Description * <span class="text-gray-400 font-normal">(steps to reproduce, expected vs actual, etc.)</span>
+                        </label>
+                        <textarea id="description" rows="6" maxlength="5000" required placeholder="Tell us everything — the more detail, the faster we can act on it."
+                            class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500"></textarea>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-[10px] text-gray-400">Min 10 characters</span>
+                            <span id="desc-count" class="text-[10px] text-gray-400">0 / 5000</span>
+                        </div>
+                    </div>
+
+                    <!-- Image URL (upload not implemented — we accept a link) -->
+                    <div>
+                        <label class="text-xs font-medium mb-1 block text-gray-700 dark:text-gray-300">
+                            Screenshot / image URL <span class="text-gray-400 font-normal">(optional)</span>
+                        </label>
+                        <input id="image-url" type="url" placeholder="https://…"
+                            class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500">
+                        <p class="text-[10px] text-gray-500 mt-1">Paste a link (e.g. Imgur, Google Drive). Direct upload coming soon.</p>
+                    </div>
+
+                    <button id="submit-btn" type="submit"
+                        class="w-full py-3 bg-cta-500 hover:bg-cta-600 text-white rounded-lg text-sm font-bold transition shadow-lg shadow-cta-500/30">
+                        <i class="fa-solid fa-paper-plane mr-2"></i>Submit for review
+                    </button>
+                </form>
+
+                <div id="submit-success" class="hidden mt-4 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-center">
+                    <i class="fa-solid fa-circle-check text-green-500 text-2xl mb-2"></i>
+                    <p class="text-sm font-bold text-green-700 dark:text-green-400">Thanks — we got it!</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Our team will review and email you the result.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3 text-center">
+            <h4 class="font-bold text-sm mb-2"><span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP</h4>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p>
+        </div>
+    </footer>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+
+    <script>
+    (function () {
+        const { api, toast } = window.FiadAPI;
+        const form = document.getElementById('earn-form');
+        const desc = document.getElementById('description');
+        const cnt  = document.getElementById('desc-count');
+
+        // Show guest email input only when not logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.FiadAuth.isLoggedIn()) {
+                document.getElementById('guest-email-wrap').classList.remove('hidden');
+            }
+        });
+
+        desc.addEventListener('input', () => cnt.textContent = desc.value.length + ' / 5000');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const type  = form.querySelector('input[name="type"]:checked')?.value;
+            const level = form.querySelector('input[name="level"]:checked')?.value;
+            const title = document.getElementById('title').value.trim();
+            const description = desc.value.trim();
+            const imageUrl = document.getElementById('image-url').value.trim() || undefined;
+            const guestEmail = document.getElementById('guest-email').value.trim() || undefined;
+
+            if (!title)                     return toast('Please add a title', 'warn');
+            if (description.length < 10)    return toast('Description must be at least 10 characters', 'warn');
+            if (!window.FiadAuth.isLoggedIn() && !guestEmail) return toast('Please enter your email', 'warn');
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Sending…';
+
+            try {
+                await api.post('/feedback', {
+                    type, levelRequested: level, title, description, imageUrl, guestEmail,
+                });
+                form.reset();
+                cnt.textContent = '0 / 5000';
+                document.getElementById('submit-success').classList.remove('hidden');
+                toast('Submission received!', 'success');
+            } catch (err) {
+                toast(err.message || 'Could not submit', 'error');
+            } finally {
+                btn.disabled = false; btn.innerHTML = orig;
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

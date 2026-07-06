@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Product Details - Fiad Shop</title>
+    <meta name="description" content="View product details at Fiad Shop. Quality products with privacy & customization.">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://via.placeholder.com https://picsum.photos; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cta: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .custom-card { transition: all 0.2s ease-in-out; border: 1px solid #e5e7eb; }
+        .dark .custom-card { border-color: #27272a; }
+        .custom-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: #f97316; }
+        .dark .custom-card:hover { border-color: #f97316; box-shadow: 0 0 12px rgba(249,115,22,0.15); }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+        .toast { animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+        .price-tag { color: #ea580c; }
+        .dark .price-tag { color: #fb923c; }
+        .rating-star { color: #fbbf24; }
+        .thumbnail-active { border: 2px solid #f97316; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Home</a>
+                <a href="products.html" class="text-cta-500 dark:text-cta-400 border-b-2 border-cta-500 dark:border-cta-400 pb-1">Products</a>
+                <a href="about.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">About</a>
+                <a href="contact.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 transition hover:scale-105" aria-label="Toggle menu"><i class="fa-solid fa-bars text-sm"></i></button>
+                <a href="login.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition" aria-label="Account"><i class="fa-regular fa-user text-lg"></i></a>
+                <a href="wishlist.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition relative" aria-label="Wishlist"><i class="fa-regular fa-heart text-lg"></i><span id="wishlist-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-md hidden">0</span></a>
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105" aria-label="Toggle dark mode"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span></a>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 px-4 py-3 space-y-2">
+            <a href="index.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Home</a>
+            <a href="products.html" class="block py-2 text-cta-500 dark:text-cta-400 font-medium">Products</a>
+            <a href="about.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">About</a>
+            <a href="contact.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a>
+            <a href="login.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Account</a>
+            <a href="wishlist.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Wishlist</a>
+        </div>
+    </nav>
+
+    <!-- BREADCRUMB -->
+    <div class="bg-gray-50 dark:bg-zinc-900 py-3 px-3 border-b border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto">
+            <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                <a href="index.html" class="hover:text-cta-500 dark:hover:text-cta-400 transition">Home</a>
+                <span>/</span>
+                <a href="products.html" class="hover:text-cta-500 dark:hover:text-cta-400 transition">Products</a>
+                <span>/</span>
+                <span class="text-gray-800 dark:text-gray-200 font-medium" id="breadcrumb-name">Product Detail</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAIL -->
+    <section class="py-6 px-3">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Image Gallery -->
+                <div>
+                    <div class="aspect-square bg-gray-100 dark:bg-zinc-800 rounded-lg overflow-hidden mb-3">
+                        <img id="main-image" src="https://picsum.photos/id/20/600/600" alt="Product image" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex gap-2 overflow-x-auto hide-scrollbar">
+                        <button class="thumbnail-btn w-16 h-16 rounded border-2 border-cta-500 overflow-hidden flex-shrink-0" data-img="https://picsum.photos/id/20/600/600"><img src="https://picsum.photos/id/20/100/100" class="w-full h-full object-cover"></button>
+                        <button class="thumbnail-btn w-16 h-16 rounded border-2 border-gray-200 dark:border-zinc-700 overflow-hidden flex-shrink-0" data-img="https://picsum.photos/id/21/600/600"><img src="https://picsum.photos/id/21/100/100" class="w-full h-full object-cover"></button>
+                        <button class="thumbnail-btn w-16 h-16 rounded border-2 border-gray-200 dark:border-zinc-700 overflow-hidden flex-shrink-0" data-img="https://picsum.photos/id/22/600/600"><img src="https://picsum.photos/id/22/100/100" class="w-full h-full object-cover"></button>
+                        <button class="thumbnail-btn w-16 h-16 rounded border-2 border-gray-200 dark:border-zinc-700 overflow-hidden flex-shrink-0" data-img="https://picsum.photos/id/23/600/600"><img src="https://picsum.photos/id/23/100/100" class="w-full h-full object-cover"></button>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div>
+                    <span class="text-xs uppercase tracking-wider text-cta-500 dark:text-cta-400 font-medium" id="product-category">Electronics</span>
+                    <h1 class="text-xl font-bold mt-1 mb-2" id="product-name">Premium Cotton T-Shirt</h1>
+                    
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-star rating-star text-xs"></i>
+                            <i class="fa-solid fa-star rating-star text-xs"></i>
+                            <i class="fa-solid fa-star rating-star text-xs"></i>
+                            <i class="fa-solid fa-star rating-star text-xs"></i>
+                            <i class="fa-solid fa-star-half-stroke rating-star text-xs"></i>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 ml-1">(128 reviews)</span>
+                        </div>
+                    </div>
+
+                    <p class="text-2xl font-bold price-tag mb-4" id="product-price">$24.99</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4" id="product-description">
+                        Premium quality product designed for maximum comfort and durability. Made with high-grade materials. Perfect for everyday use. Secure packaging and fast shipping guaranteed.
+                    </p>
+
+                    <!-- Color Selection -->
+                    <div class="mb-4">
+                        <p class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Color: <span id="selected-color" class="text-cta-500">Black</span></p>
+                        <div class="flex gap-2">
+                            <button class="color-btn w-8 h-8 rounded-full bg-black border-2 border-cta-500" data-color="Black"></button>
+                            <button class="color-btn w-8 h-8 rounded-full bg-white border-2 border-gray-300 dark:border-zinc-600" data-color="White"></button>
+                            <button class="color-btn w-8 h-8 rounded-full bg-blue-600 border-2 border-gray-300 dark:border-zinc-600" data-color="Blue"></button>
+                            <button class="color-btn w-8 h-8 rounded-full bg-red-500 border-2 border-gray-300 dark:border-zinc-600" data-color="Red"></button>
+                        </div>
+                    </div>
+
+                    <!-- Size Selection -->
+                    <div class="mb-4">
+                        <p class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Size: <span id="selected-size" class="text-cta-500">M</span></p>
+                        <div class="flex gap-2">
+                            <button class="size-btn px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-cta-500 text-white font-bold" data-size="S">S</button>
+                            <button class="size-btn px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400" data-size="M">M</button>
+                            <button class="size-btn px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400" data-size="L">L</button>
+                            <button class="size-btn px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400" data-size="XL">XL</button>
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="mb-4">
+                        <p class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Quantity:</p>
+                        <div class="flex items-center gap-3">
+                            <button id="qty-minus" class="w-8 h-8 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 transition text-sm">-</button>
+                            <span id="qty-display" class="text-sm font-bold w-6 text-center">1</span>
+                            <button id="qty-plus" class="w-8 h-8 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 transition text-sm">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap gap-2 mt-6">
+                        <button id="add-to-cart-detail" class="flex-1 bg-cta-500 hover:bg-cta-600 text-white py-3 rounded-lg text-sm font-bold transition shadow-lg shadow-cta-500/25">
+                            <i class="fa-solid fa-cart-plus mr-2"></i>Add to Cart
+                        </button>
+                        <button id="buy-now-btn" class="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 rounded-lg text-sm font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition">
+                            <i class="fa-solid fa-bolt mr-2"></i>Buy Now
+                        </button>
+                        <button id="wishlist-toggle" class="px-4 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg hover:border-cta-500 dark:hover:border-cta-500 transition" aria-label="Add to wishlist">
+                            <i class="fa-regular fa-heart text-gray-500 dark:text-gray-400"></i>
+                        </button>
+                    </div>
+
+                    <!-- Secure Badge -->
+                    <div class="flex items-center gap-3 mt-4 p-3 bg-gray-50 dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800">
+                        <i class="fa-solid fa-shield-halved text-cta-500 text-lg"></i>
+                        <div>
+                            <p class="text-xs font-medium text-gray-700 dark:text-gray-300">Secure Checkout</p>
+                            <p class="text-[10px] text-gray-400 dark:text-gray-500">Encrypted payment &amp; SSL protected</p>
+                        </div>
+                        <i class="fa-solid fa-truck-fast text-cta-500 text-lg ml-auto"></i>
+                        <div>
+                            <p class="text-xs font-medium text-gray-700 dark:text-gray-300">Free Shipping</p>
+                            <p class="text-[10px] text-gray-400 dark:text-gray-500">On orders over $50</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCT DETAILS TABS -->
+    <section class="py-6 px-3 bg-gray-50 dark:bg-zinc-950">
+        <div class="container mx-auto">
+            <div class="flex border-b border-gray-200 dark:border-zinc-800 mb-4">
+                <button class="tab-btn text-sm font-bold pb-2 px-4 border-b-2 border-cta-500 text-cta-500" data-tab="description">Description</button>
+                <button class="tab-btn text-sm font-medium pb-2 px-4 text-gray-500 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition" data-tab="reviews">Reviews (128)</button>
+                <button class="tab-btn text-sm font-medium pb-2 px-4 text-gray-500 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition" data-tab="shipping">Shipping</button>
+            </div>
+            <div id="tab-description" class="tab-content text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p>This premium product is crafted with high-quality materials to ensure longevity and comfort. Features include:</p>
+                <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li>100% premium grade materials</li>
+                    <li>Ergonomic design for everyday comfort</li>
+                    <li>Easy maintenance and care</li>
+                    <li>Eco-friendly packaging</li>
+                    <li>1 year warranty included</li>
+                </ul>
+            </div>
+            <div id="tab-reviews" class="tab-content hidden">
+                <div class="space-y-4">
+                    <!-- Review 1 -->
+                    <div class="border-b border-gray-200 dark:border-zinc-800 pb-4">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div class="flex text-yellow-400 text-xs">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="text-xs font-medium text-gray-800 dark:text-gray-200">John Doe</span>
+                            <span class="text-[10px] text-gray-400 dark:text-gray-500">2 days ago</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Amazing quality! Exceeded my expectations. Fast shipping too. Highly recommend this product to anyone looking for premium quality.</p>
+                    </div>
+                    <!-- Review 2 -->
+                    <div class="border-b border-gray-200 dark:border-zinc-800 pb-4">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div class="flex text-yellow-400 text-xs">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                            <span class="text-xs font-medium text-gray-800 dark:text-gray-200">Sarah M.</span>
+                            <span class="text-[10px] text-gray-400 dark:text-gray-500">1 week ago</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Great product for the price. The quality is excellent and it looks exactly as described. Would definitely recommend to friends.</p>
+                    </div>
+                    <!-- Review 3 -->
+                    <div class="border-b border-gray-200 dark:border-zinc-800 pb-4">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div class="flex text-yellow-400 text-xs">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="text-xs font-medium text-gray-800 dark:text-gray-200">Michael R.</span>
+                            <span class="text-[10px] text-gray-400 dark:text-gray-500">2 weeks ago</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Excellent customer service and fast delivery. The product is exactly what I needed. Very satisfied with my purchase.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-shipping" class="tab-content hidden text-sm text-gray-600 dark:text-gray-400">
+                <p>We offer fast and secure shipping worldwide:</p>
+                <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li><strong>Standard:</strong> 5-7 business days (Free over $50)</li>
+                    <li><strong>Express:</strong> 2-3 business days ($9.99)</li>
+                    <li><strong>Overnight:</strong> 1 business day ($19.99)</li>
+                    <li>All packages are tracked and insured</li>
+                    <li>30-day easy returns</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- RELATED PRODUCTS -->
+    <section class="py-6 px-3">
+        <div class="container mx-auto">
+            <h3 class="text-md font-bold mb-4">Related Products</h3>
+            <div class="grid grid-cols-3 md:grid-cols-4 gap-3" id="related-grid"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h4 class="font-bold text-sm mb-3">
+                        <span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP
+                    </h4>
+                    <p class="text-[10px] text-gray-400 dark:text-gray-500 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="about.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">About Us</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a></li>
+                        <li><a href="faq.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">FAQ</a></li>
+                        <li><a href="products.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Shop All</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="privacy.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Terms of Service</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4>
+                    <div class="flex gap-2">
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Twitter"><i class="fa-brands fa-twitter text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="YouTube"><i class="fa-brands fa-youtube text-xs"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center">
+                <p class="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+
+    <script>
+        (function() {
+            // Dark Mode
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            function setTheme(t) { if (t === 'dark') { htmlElement.classList.add('dark'); themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); } else { htmlElement.classList.remove('dark'); themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); } localStorage.setItem('theme', t); }
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(htmlElement.classList.contains('dark') ? 'light' : 'dark'));
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') setTheme('dark'); else if (savedTheme === 'light') setTheme('light'); else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            // Mobile Menu
+            document.getElementById('mobile-menu-toggle')?.addEventListener('click', function() { 
+                document.getElementById('mobile-menu')?.classList.toggle('hidden'); 
+            });
+
+            // Cart Functions
+            function getCart() { 
+                try { return JSON.parse(localStorage.getItem('fiad_cart')) || []; } 
+                catch { return []; } 
+            }
+            function saveCart(c) { localStorage.setItem('fiad_cart', JSON.stringify(c)); }
+            function updateCartUI() { 
+                const cart = getCart(); 
+                const total = cart.reduce((s,i) => s + i.quantity, 0); 
+                const el = document.getElementById('cart-count'); 
+                if (el) el.textContent = total; 
+            }
+            function showToast(msg) { 
+                const c = document.getElementById('toast-container'); 
+                if (!c) return; 
+                const t = document.createElement('div'); 
+                t.className = 'toast bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg px-4 py-3 flex items-center gap-2 text-sm'; 
+                t.innerHTML = `<i class="fa-solid fa-check-circle text-green-500"></i><span>${msg}</span>`; 
+                c.appendChild(t); 
+                setTimeout(() => t.remove(), 3000); 
+            }
+
+            // Quantity
+            let quantity = 1;
+            document.getElementById('qty-plus')?.addEventListener('click', () => { 
+                quantity = Math.min(99, quantity + 1); 
+                document.getElementById('qty-display').textContent = quantity; 
+            });
+            document.getElementById('qty-minus')?.addEventListener('click', () => { 
+                quantity = Math.max(1, quantity - 1); 
+                document.getElementById('qty-display').textContent = quantity; 
+            });
+
+            // Color selection
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.color-btn').forEach(b => {
+                        b.classList.remove('ring-2', 'ring-cta-500');
+                        b.classList.add('border-2', 'border-gray-300', 'dark:border-zinc-600');
+                    });
+                    this.classList.add('ring-2', 'ring-cta-500');
+                    this.classList.remove('border-2', 'border-gray-300', 'dark:border-zinc-600');
+                    document.getElementById('selected-color').textContent = this.getAttribute('data-color');
+                });
+            });
+
+            // Size selection
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.size-btn').forEach(b => { 
+                        b.classList.remove('bg-cta-500', 'text-white', 'font-bold');
+                        b.classList.add('bg-white', 'dark:bg-zinc-900', 'text-gray-600', 'dark:text-gray-400'); 
+                    });
+                    this.classList.add('bg-cta-500', 'text-white', 'font-bold');
+                    this.classList.remove('bg-white', 'dark:bg-zinc-900', 'text-gray-600', 'dark:text-gray-400');
+                    document.getElementById('selected-size').textContent = this.getAttribute('data-size');
+                });
+            });
+
+            // Thumbnail gallery
+            document.querySelectorAll('.thumbnail-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.thumbnail-btn').forEach(b => {
+                        b.classList.remove('border-cta-500');
+                        b.classList.add('border-gray-200', 'dark:border-zinc-700');
+                    });
+                    this.classList.add('border-cta-500');
+                    this.classList.remove('border-gray-200', 'dark:border-zinc-700');
+                    document.getElementById('main-image').src = this.getAttribute('data-img');
+                });
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => { 
+                        b.classList.remove('border-cta-500', 'text-cta-500', 'font-bold'); 
+                        b.classList.add('text-gray-500', 'dark:text-gray-400', 'font-medium'); 
+                    });
+                    this.classList.add('border-cta-500', 'text-cta-500', 'font-bold');
+                    this.classList.remove('text-gray-500', 'dark:text-gray-400', 'font-medium');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                    document.getElementById('tab-' + this.getAttribute('data-tab')).classList.remove('hidden');
+                });
+            });
+
+            // Add to cart
+            document.getElementById('add-to-cart-detail')?.addEventListener('click', function() {
+                const name = document.getElementById('product-name')?.textContent || 'Product';
+                const price = parseFloat(document.getElementById('product-price')?.textContent?.replace('$','') || '0');
+                const cart = getCart();
+                const exist = cart.find(i => i.id == 'detail');
+                if (exist) exist.quantity += quantity;
+                else cart.push({ id: 'detail', name, price, quantity });
+                saveCart(cart);
+                updateCartUI();
+                showToast(`${name} (×${quantity}) added to cart!`);
+            });
+
+            // Wishlist toggle
+            document.getElementById('wishlist-toggle')?.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-regular');
+                icon.classList.toggle('fa-solid');
+                icon.classList.toggle('text-red-500');
+                showToast(icon.classList.contains('fa-solid') ? 'Added to wishlist!' : 'Removed from wishlist');
+            });
+
+            // Related products
+            const related = [
+                { id: 2, name: "Minimalist Analog Watch", price: 89.00, img: "https://picsum.photos/id/82/400/400" },
+                { id: 4, name: "Wireless Noise Earbuds", price: 120.00, img: "https://picsum.photos/id/96/400/400" },
+                { id: 7, name: "Bluetooth Speaker", price: 65.00, img: "https://picsum.photos/id/29/400/400" },
+                { id: 10, name: "Mechanical Keyboard", price: 85.00, img: "https://picsum.photos/id/48/400/400" }
+            ];
+            const grid = document.getElementById('related-grid');
+            if (grid) {
+                grid.innerHTML = related.map(p => `
+                    <div class="custom-card bg-white dark:bg-zinc-900 rounded-md overflow-hidden">
+                        <a href="product-detail.html?id=${p.id}" class="block aspect-square bg-gray-100 dark:bg-zinc-800"><img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy"></a>
+                        <div class="p-2"><a href="product-detail.html?id=${p.id}"><h4 class="text-xs font-medium truncate hover:text-cta-500 transition">${p.name}</h4></a><p class="price-tag font-bold text-xs mt-1">$${p.price.toFixed(2)}</p></div>
+                    </div>
+                `).join('');
+            }
+
+            // ---- FIAD SHOP: hydrate from API ---------------------------------------
+            const _api = window.FiadAPI?.api;
+            const _toast = window.FiadAPI?.toast || function(){};
+            let _productCache = null;   // full API product record for cart
+
+            function _renderVariants(product) {
+                // Colors
+                const colors = new Set(product.variants?.map(v => v.color).filter(Boolean));
+                const sizes  = new Set(product.variants?.map(v => v.size).filter(Boolean));
+                if (colors.size) {
+                    const wrap = document.querySelector('.color-btn')?.parentElement;
+                    if (wrap) {
+                        wrap.innerHTML = [...colors].map((c, i) => `
+                          <button class="color-btn w-8 h-8 rounded-full border-2 ${i===0?'border-cta-500 ring-2 ring-cta-500':'border-gray-300 dark:border-zinc-600'}"
+                                  style="background:${_colorHex(c)}" data-color="${c}" title="${c}"></button>
+                        `).join('');
+                        document.getElementById('selected-color').textContent = [...colors][0];
+                    }
+                }
+                if (sizes.size) {
+                    const wrap = document.querySelector('.size-btn')?.parentElement;
+                    if (wrap) {
+                        wrap.innerHTML = [...sizes].map((s, i) => `
+                          <button class="size-btn px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded ${i===0?'bg-cta-500 text-white font-bold':'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400'}"
+                                  data-size="${s}">${s}</button>
+                        `).join('');
+                        document.getElementById('selected-size').textContent = [...sizes][0];
+                    }
+                }
+                // Re-attach the click handlers to the newly injected buttons
+                document.querySelectorAll('.color-btn').forEach(btn => btn.addEventListener('click', function () {
+                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('ring-2','ring-cta-500','border-cta-500'));
+                    this.classList.add('ring-2','ring-cta-500','border-cta-500');
+                    document.getElementById('selected-color').textContent = this.getAttribute('data-color');
+                }));
+                document.querySelectorAll('.size-btn').forEach(btn => btn.addEventListener('click', function () {
+                    document.querySelectorAll('.size-btn').forEach(b => {
+                        b.classList.remove('bg-cta-500','text-white','font-bold');
+                        b.classList.add('bg-white','dark:bg-zinc-900','text-gray-600','dark:text-gray-400');
+                    });
+                    this.classList.add('bg-cta-500','text-white','font-bold');
+                    this.classList.remove('bg-white','dark:bg-zinc-900','text-gray-600','dark:text-gray-400');
+                    document.getElementById('selected-size').textContent = this.getAttribute('data-size');
+                }));
+            }
+
+            function _colorHex(name) {
+                const map = { black:'#000', white:'#fff', blue:'#2563eb', red:'#ef4444',
+                              green:'#16a34a', yellow:'#eab308', gray:'#6b7280', grey:'#6b7280',
+                              orange:'#f97316', pink:'#ec4899', purple:'#9333ea', brown:'#78350f' };
+                return map[String(name).toLowerCase()] || '#9ca3af';
+            }
+
+            async function _loadProduct() {
+                const id = new URLSearchParams(location.search).get('id');
+                if (!id || !_api) return;
+                try {
+                    const { product } = await _api.get('/products/' + encodeURIComponent(id));
+                    _productCache = product;
+                    document.getElementById('product-name').textContent = product.name;
+                    document.getElementById('product-category').textContent = product.category;
+                    document.getElementById('product-price').textContent = '$' + Number(product.basePrice).toFixed(2);
+                    document.getElementById('product-description').textContent = product.description || '';
+                    if (Array.isArray(product.images) && product.images[0]) {
+                        const main = document.getElementById('main-image');
+                        if (main) main.src = product.images[0];
+                    }
+                    document.title = product.name + ' | Fiad Shop';
+                    if (product.isProMode) {
+                        const badge = document.createElement('span');
+                        badge.className = 'ml-2 inline-block bg-cta-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full align-middle';
+                        badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i>Pro Mode ' + (product.affiliateCommission || 0) + '%';
+                        document.getElementById('product-name').appendChild(badge);
+                    }
+                    _renderVariants(product);
+                } catch (e) {
+                    console.warn('[product-detail] load failed:', e.message);
+                    _toast('Could not load product — showing placeholder.', 'warn');
+                }
+            }
+
+            // Override the local Add to Cart handler to use the shared cart (which
+            // dispatches events, updates badges, and includes variant data).
+            document.getElementById('add-to-cart-detail')?.addEventListener('click', function () {
+                const variant = {
+                    color: document.getElementById('selected-color')?.textContent,
+                    size:  document.getElementById('selected-size')?.textContent,
+                };
+                if (_productCache) {
+                    window.FiadAPI.cart.add(_productCache, quantity, variant);
+                } else {
+                    // Fallback: no API load succeeded — synthesise from DOM
+                    const name = document.getElementById('product-name')?.textContent || 'Product';
+                    const price = parseFloat(document.getElementById('product-price')?.textContent?.replace('$','') || '0');
+                    window.FiadAPI.cart.add({
+                        id: new URLSearchParams(location.search).get('id') || 'demo',
+                        name, basePrice: price,
+                        images: [document.getElementById('main-image')?.src],
+                    }, quantity, variant);
+                }
+            }, { capture: true });
+
+            document.getElementById('buy-now-btn')?.addEventListener('click', function () {
+                document.getElementById('add-to-cart-detail').click();
+                setTimeout(() => { location.href = 'checkout.html'; }, 250);
+            });
+
+            // Wishlist — hook into shared wishlist store
+            document.getElementById('wishlist-toggle')?.addEventListener('click', function () {
+                if (!_productCache) return;
+                window.FiadAPI.wishlist.toggle(_productCache);
+                const icon = this.querySelector('i');
+                const on = window.FiadAPI.wishlist.has(_productCache.id);
+                icon.classList.toggle('fa-regular', !on);
+                icon.classList.toggle('fa-solid',  on);
+                icon.classList.toggle('text-red-500', on);
+            }, { capture: true });
+
+            _loadProduct();
+
+            // Initialize
+            updateCartUI();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Privacy Policy - Fiad Shop</title>
+    <meta name="description" content="Privacy policy of Fiad Shop. Learn how we protect your data and privacy.">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cta: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+        .privacy-section {
+            transition: all 0.2s ease;
+        }
+        .privacy-section:hover {
+            border-color: #f97316;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Products</a>
+                <a href="about.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">About</a>
+                <a href="contact.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 transition hover:scale-105" aria-label="Toggle menu"><i class="fa-solid fa-bars text-sm"></i></button>
+                <a href="login.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition" aria-label="Account"><i class="fa-regular fa-user text-lg"></i></a>
+                <a href="wishlist.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition relative" aria-label="Wishlist"><i class="fa-regular fa-heart text-lg"></i><span id="wishlist-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-md hidden">0</span></a>
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105" aria-label="Toggle dark mode"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span></a>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 px-4 py-3 space-y-2">
+            <a href="index.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Home</a>
+            <a href="products.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Products</a>
+            <a href="about.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">About</a>
+            <a href="contact.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a>
+            <a href="login.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Account</a>
+            <a href="wishlist.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Wishlist</a>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="bg-gray-50 dark:bg-zinc-900 py-6 px-3 border-b border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto">
+            <h1 class="text-xl font-bold">Privacy Policy</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Your privacy matters to us. Here's how we protect it.</p>
+        </div>
+    </div>
+
+    <!-- PRIVACY POLICY CONTENT -->
+    <section class="py-6 px-3">
+        <div class="container mx-auto max-w-3xl">
+            <div class="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg p-6 space-y-4">
+                
+                <p class="text-xs text-gray-500 dark:text-gray-400"><strong>Last Updated:</strong> June 20, 2026</p>
+
+                <!-- Section 1 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-user text-cta-500 text-xs"></i>
+                        1. Information We Collect
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        We collect information you provide directly: name, email, and shipping address. This helps us process your orders and deliver products to you.
+                    </p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-eye-slash text-cta-500 text-xs"></i>
+                        2. No Browsing Data Collection
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        We don't collect any type of browsing data. We have no technology for collecting your browsing experience. Your privacy is preserved.
+                    </p>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-credit-card text-cta-500 text-xs"></i>
+                        3. Payment Processing
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Your payment process is run by your platform. We just see the name of your payment account. We never store your payment details.
+                    </p>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-robot text-cta-500 text-xs"></i>
+                        4. No Algorithmic Data Usage
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        We didn't set up any technology to use your data (like what you order) for algorithm processes. Whatever you see in recommendations is made by winning product basis, not by tracking you.
+                    </p>
+                </div>
+
+                <!-- Section 5 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-globe text-cta-500 text-xs"></i>
+                        5. Country Recommendations
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        If you enable country recommendation, you will see your country's trendy products based on your selection. This is optional and fully under your control.
+                    </p>
+                </div>
+
+                <!-- Section 6 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-cookie text-cta-500 text-xs"></i>
+                        6. Cookie Policy
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        We only use cookies for saving your account in your browser. We don't use tracking or non-privacy cookies. Your browsing remains private.
+                    </p>
+                </div>
+
+                <!-- Section 7 -->
+                <div class="privacy-section border border-gray-100 dark:border-zinc-800 rounded-lg p-4 hover:border-cta-500 transition">
+                    <h3 class="font-bold text-sm text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-database text-cta-500 text-xs"></i>
+                        7. Your Data Management
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        You manage your data by Settings → My Data. You can even delete specific data you want. You have full control over your personal information.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h4 class="font-bold text-sm mb-3">
+                        <span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP
+                    </h4>
+                    <p class="text-[10px] text-gray-400 dark:text-gray-500 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="about.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">About Us</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a></li>
+                        <li><a href="faq.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">FAQ</a></li>
+                        <li><a href="products.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Shop All</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="privacy.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Terms of Service</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4>
+                    <div class="flex gap-2">
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Twitter"><i class="fa-brands fa-twitter text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="YouTube"><i class="fa-brands fa-youtube text-xs"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center">
+                <p class="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // Dark Mode
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            function setTheme(theme) {
+                if (theme === 'dark') { 
+                    htmlElement.classList.add('dark'); 
+                    themeIcon.classList.remove('fa-moon'); 
+                    themeIcon.classList.add('fa-sun'); 
+                } else { 
+                    htmlElement.classList.remove('dark'); 
+                    themeIcon.classList.remove('fa-sun'); 
+                    themeIcon.classList.add('fa-moon'); 
+                }
+                localStorage.setItem('theme', theme);
+            }
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(htmlElement.classList.contains('dark') ? 'light' : 'dark'));
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') setTheme('dark');
+            else if (savedTheme === 'light') setTheme('light');
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            // Mobile Menu
+            document.getElementById('mobile-menu-toggle')?.addEventListener('click', function() {
+                document.getElementById('mobile-menu')?.classList.toggle('hidden');
+            });
+
+            // Cart Count
+            function getCart() { 
+                try { return JSON.parse(localStorage.getItem('fiad_cart')) || []; } 
+                catch { return []; } 
+            }
+            function updateCartUI() { 
+                const cart = getCart(); 
+                const total = cart.reduce((s, i) => s + i.quantity, 0); 
+                const el = document.getElementById('cart-count'); 
+                if (el) el.textContent = total; 
+            }
+            updateCartUI();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Fiad Shop | Premium Store</title>
+
+    <!-- Security Meta Tags -->
+    <meta name="description" content="Fiad Shop - premium products with quality, privacy & customization. Shop with confidence.">
+    <meta name="robots" content="index, follow">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://via.placeholder.com https://placehold.co https://images.unsplash.com https://picsum.photos; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: {
+                        'xs': '480px',
+                    },
+                    colors: {
+                        cta: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .custom-card {
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;
+        }
+        .dark .custom-card {
+            border-color: #27272a;
+        }
+        .custom-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            border-color: #f97316;
+        }
+        .dark .custom-card:hover {
+            border-color: #f97316;
+            box-shadow: 0 0 12px rgba(249,115,22,0.15);
+        }
+
+        *:focus-visible {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid #f97316;
+            outline-offset: 2px;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fed7aa 100%);
+        }
+        .dark .hero-gradient {
+            background: linear-gradient(135deg, #1c1917 0%, #292524 50%, #1c1917 100%);
+        }
+
+        .toast {
+            animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        .price-tag {
+            color: #ea580c;
+        }
+        .dark .price-tag {
+            color: #fb923c;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-cta-500 dark:text-cta-400 border-b-2 border-cta-500 dark:border-cta-400 pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Products</a>
+                <a href="about.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">About</a>
+                <a href="contact.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 transition hover:scale-105" aria-label="Toggle menu">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+
+                <a href="login.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition" aria-label="Account">
+                    <i class="fa-regular fa-user text-lg"></i>
+                </a>
+
+                <a href="wishlist.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition relative" aria-label="Wishlist">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                    <span id="wishlist-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-md hidden">0</span>
+                </a>
+
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105 focus:outline-none" aria-label="Toggle dark mode">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative cursor-pointer group" aria-label="Shopping cart">
+                    <i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span>
+                </a>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 px-4 py-3 space-y-2">
+            <a href="index.html" class="block py-2 text-cta-500 dark:text-cta-400 font-medium border-b border-cta-100 dark:border-cta-900">Home</a>
+            <a href="products.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Products</a>
+            <a href="about.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">About</a>
+            <a href="contact.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a>
+            <a href="login.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Account</a>
+            <a href="wishlist.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Wishlist</a>
+        </div>
+    </nav>
+
+    <!-- ===== HERO BANNER ===== -->
+    <section class="hero-gradient py-10 md:py-16 px-4">
+        <div class="container mx-auto text-center">
+            <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3">
+                <span class="text-cta-500">Fiad</span> Shop
+            </h1>
+            <p class="text-sm md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6">
+                Privacy, Excellence, Personalization & Direct Pricing — all in one.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="products.html" class="bg-cta-500 hover:bg-cta-600 text-white px-4 py-2.5 rounded-lg font-bold text-sm transition shadow-lg shadow-cta-500/25 hover:shadow-cta-600/30">
+                    <i class="fa-solid fa-bag-shopping mr-2"></i>Shop Now
+                </a>
+                <a href="#packages" class="bg-white dark:bg-zinc-800 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-zinc-700 px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-50 dark:hover:bg-zinc-700 transition">
+                    <i class="fa-regular fa-star mr-2"></i>Earn With Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CUSTOM PACKAGES ===== -->
+    <section id="packages" class="py-5 px-3">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-md font-bold">Custom Packages</h3>
+                <a href="products.html?filter=packages" class="text-xs text-cta-500 dark:text-cta-400 font-semibold hover:underline focus:outline-none">
+                    See More &rarr;
+                </a>
+            </div>
+
+            <div class="flex overflow-x-auto gap-3 pb-2 hide-scrollbar snap-x">
+                <div class="snap-center custom-card bg-white dark:bg-zinc-900 w-40 p-2 rounded-md shadow-sm flex-shrink-0">
+                    <img src="https://picsum.photos/id/107/200/200" alt="Batman Tactical Armor Package" class="w-full h-20 object-cover rounded-sm mb-2" loading="lazy">
+                    <h4 class="text-sm font-bold truncate mb-1">Batman Package</h4>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-2 line-clamp-2">
+                        Tactical Suit, Batarangs, Heavy Cape
+                    </p>
+                    <a href="product-detail.html?id=batman-pkg" class="block w-full py-1 bg-cta-500 text-white rounded text-[10px] font-bold hover:bg-cta-600 transition text-center">Details</a>
+                </div>
+
+                <div class="snap-center custom-card bg-white dark:bg-zinc-900 w-40 p-2 rounded-md shadow-sm flex-shrink-0">
+                    <img src="https://picsum.photos/id/104/200/200" alt="Superman Hero Package" class="w-full h-20 object-cover rounded-sm mb-2" loading="lazy">
+                    <h4 class="text-sm font-bold truncate mb-1">Superman Package</h4>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-2 line-clamp-2">
+                        Super Suit, Krypton Boots, Red Cape
+                    </p>
+                    <a href="product-detail.html?id=superman-pkg" class="block w-full py-1 bg-cta-500 text-white rounded text-[10px] font-bold hover:bg-cta-600 transition text-center">Details</a>
+                </div>
+
+                <div class="snap-center custom-card bg-white dark:bg-zinc-900 w-40 p-2 rounded-md shadow-sm flex-shrink-0">
+                    <img src="https://picsum.photos/id/106/200/200" alt="Jungle Survival Kit" class="w-full h-20 object-cover rounded-sm mb-2" loading="lazy">
+                    <h4 class="text-sm font-bold truncate mb-1">Jungle Survivor</h4>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-2 line-clamp-2">
+                        Compass, Survival Knife, Fire Starter
+                    </p>
+                    <a href="product-detail.html?id=jungle-pkg" class="block w-full py-1 bg-cta-500 text-white rounded text-[10px] font-bold hover:bg-cta-600 transition text-center">Details</a>
+                </div>
+
+                <div class="snap-center custom-card bg-white dark:bg-zinc-900 w-40 p-2 rounded-md shadow-sm flex-shrink-0">
+                    <img src="https://picsum.photos/id/96/200/200" alt="Gamer Pro Equipment" class="w-full h-20 object-cover rounded-sm mb-2" loading="lazy">
+                    <h4 class="text-sm font-bold truncate mb-1">Gamer Pro Package</h4>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-2 line-clamp-2">
+                        Mech Keyboard, RGB Mouse, Pro Headset
+                    </p>
+                    <a href="product-detail.html?id=gamer-pkg" class="block w-full py-1 bg-cta-500 text-white rounded text-[10px] font-bold hover:bg-cta-600 transition text-center">Details</a>
+                </div>
+
+                <div class="snap-center custom-card bg-white dark:bg-zinc-900 w-40 p-2 rounded-md shadow-sm flex-shrink-0">
+                    <img src="https://picsum.photos/id/108/200/200" alt="Chef Starter Kit" class="w-full h-20 object-cover rounded-sm mb-2" loading="lazy">
+                    <h4 class="text-sm font-bold truncate mb-1">Chef's Starter</h4>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-2 line-clamp-2">
+                        Knife Set, Heat Apron, Cutting Board
+                    </p>
+                    <a href="product-detail.html?id=chef-pkg" class="block w-full py-1 bg-cta-500 text-white rounded text-[10px] font-bold hover:bg-cta-600 transition text-center">Details</a>
+                </div>
+
+                <div class="snap-center custom-card bg-white dark:bg-zinc-900 w-40 p-2 rounded-md shadow-sm flex-shrink-0">
+                    <img src="https://picsum.photos/id/109/200/200" alt="Fitness Pro Package" class="w-full h-20 object-cover rounded-sm mb-2" loading="lazy">
+                    <h4 class="text-sm font-bold truncate mb-1">Fitness Pro</h4>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight mb-2 line-clamp-2">
+                        Yoga Mat, Dumbbells, Resistance Bands
+                    </p>
+                    <a href="product-detail.html?id=fitness-pkg" class="block w-full py-1 bg-cta-500 text-white rounded text-[10px] font-bold hover:bg-cta-600 transition text-center">Details</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURED PRODUCTS ===== -->
+    <section id="products" class="py-6 px-3 bg-gray-50 dark:bg-zinc-950">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-md font-bold">Featured Products</h3>
+                <a href="products.html" class="text-xs text-cta-500 dark:text-cta-400 font-semibold hover:underline focus:outline-none">
+                    View All &rarr;
+                </a>
+            </div>
+
+            <div id="loading-spinner" class="flex flex-col justify-center items-center py-12" role="status" aria-live="polite">
+                <div class="animate-spin rounded-full h-8 w-8 border-4 border-cta-500 border-t-transparent"></div>
+                <p class="text-xs text-gray-500 mt-2">Loading products...</p>
+            </div>
+
+            <div id="products-grid" class="grid grid-cols-3 gap-2 xs:gap-3 hidden"></div>
+        </div>
+    </section>
+
+    <!-- ===== PROMO BANNER ===== -->
+    <section class="py-8 px-4 bg-cta-500">
+        <div class="container mx-auto text-center">
+            <h2 class="text-xl md:text-2xl font-bold text-white mb-2">Free Shipping on Orders Over $50</h2>
+            <p class="text-cta-100 text-sm mb-4">Use code: <span class="font-bold bg-white text-cta-500 px-3 py-1 rounded">FIAD2026</span></p>
+            <a href="products.html" class="inline-block bg-white text-cta-600 px-6 py-3 rounded-lg font-bold text-sm hover:bg-cta-50 transition shadow-lg">
+                <i class="fa-solid fa-bolt mr-2"></i>Shop Sale
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h4 class="font-bold text-sm mb-3">
+                        <span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP
+                    </h4>
+                    <p class="text-[10px] text-gray-400 dark:text-gray-500 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="about.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">About Us</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a></li>
+                        <li><a href="faq.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">FAQ</a></li>
+                        <li><a href="products.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Shop All</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="privacy.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Terms of Service</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4>
+                    <div class="flex gap-2">
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook-f text-xs"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Twitter">
+                            <i class="fa-brands fa-twitter text-xs"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram text-xs"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center">
+                <p class="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+
+    <script>
+        (function() {
+            // Dark Mode
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    htmlElement.classList.add('dark');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    htmlElement.classList.remove('dark');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const isDark = htmlElement.classList.contains('dark');
+                    setTheme(isDark ? 'light' : 'dark');
+                });
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') setTheme('dark');
+            else if (savedTheme === 'light') setTheme('light');
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            // Mobile Menu
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileToggle && mobileMenu) {
+                mobileToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Product Data
+            const staticProducts = [
+                { id: 1, name: "Premium Cotton T-Shirt", price: 24.99, image_url: "https://picsum.photos/id/20/400/400" },
+                { id: 2, name: "Minimalist Analog Watch", price: 89.00, image_url: "https://picsum.photos/id/82/400/400" },
+                { id: 3, name: "Urban Travel Backpack", price: 55.50, image_url: "https://picsum.photos/id/123/400/400" },
+                { id: 4, name: "Wireless Noise Earbuds", price: 120.00, image_url: "https://picsum.photos/id/96/400/400" },
+                { id: 5, name: "Leather Slim Wallet", price: 35.00, image_url: "https://picsum.photos/id/30/400/400" },
+                { id: 6, name: "Smart Fitness Tracker", price: 49.99, image_url: "https://picsum.photos/id/143/400/400" },
+                { id: 7, name: "Bluetooth Speaker", price: 65.00, image_url: "https://picsum.photos/id/29/400/400" },
+                { id: 8, name: "Gaming Mouse Pad", price: 15.00, image_url: "https://picsum.photos/id/175/400/400" },
+                { id: 9, name: "Wireless Mouse", price: 29.00, image_url: "https://picsum.photos/id/186/400/400" }
+            ];
+
+            // Fiad Shop: fetches Admin-curated homepage featured products.
+            // Falls back to the local demo list only if the API isn't reachable
+            // (so the design still previews before the backend is deployed).
+            async function fetchProducts() {
+                try {
+                    const { items } = await window.FiadAPI.api.get('/settings/homepage');
+                    if (!items || !items.length) return staticProducts;
+                    // Normalise API shape -> what renderProducts() expects
+                    return items.map(p => ({
+                        id: p.id,
+                        name: p.name,
+                        price: Number(p.basePrice),
+                        image_url: (Array.isArray(p.images) && p.images[0]) || 'https://picsum.photos/400',
+                        sku: p.sku,
+                        isProMode: p.isProMode,
+                    }));
+                } catch (e) {
+                    console.warn('[homepage] API unreachable, falling back to demo:', e.message);
+                    return staticProducts;
+                }
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/[&<>]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    return m;
+                });
+            }
+
+            function renderProducts(products) {
+                const grid = document.getElementById('products-grid');
+                if (!grid) return;
+
+                const productsHTML = products.map(product => `
+                    <div class="custom-card bg-white dark:bg-zinc-900 rounded-md flex flex-col h-full overflow-hidden">
+                        <a href="product-detail.html?id=${product.id}" class="relative w-full aspect-square overflow-hidden bg-gray-100 dark:bg-zinc-800 block">
+                            <img 
+                                src="${product.image_url}" 
+                                alt="${escapeHtml(product.name)}" 
+                                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                                loading="lazy"
+                                onerror="this.src='https://via.placeholder.com/400x400?text=Fiad+Shop'"
+                            >
+                        </a>
+                        <div class="p-2 flex flex-col flex-grow">
+                            <a href="product-detail.html?id=${product.id}">
+                                <h3 class="text-xs font-medium text-gray-800 dark:text-gray-200 mb-1 line-clamp-2 leading-tight min-h-[2rem] hover:text-cta-500 dark:hover:text-cta-400 transition">
+                                    ${escapeHtml(product.name)}
+                                </h3>
+                            </a>
+                            <p class="price-tag font-bold text-sm mb-2">$${product.price.toFixed(2)}</p>
+                            <button 
+                                class="add-to-cart-btn w-full py-1.5 bg-cta-500 text-white rounded text-xs font-bold hover:bg-cta-600 transition focus:outline-none focus:ring-2 focus:ring-cta-500"
+                                data-id="${product.id}"
+                                data-name="${escapeHtml(product.name)}"
+                                data-price="${product.price}"
+                                aria-label="Add ${escapeHtml(product.name)} to cart"
+                            >
+                                <i class="fa-solid fa-cart-plus mr-1"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                grid.innerHTML = productsHTML;
+
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const id = btn.getAttribute('data-id');
+                        const name = btn.getAttribute('data-name');
+                        const price = parseFloat(btn.getAttribute('data-price'));
+                        addToCart({ id, name, price });
+                    });
+                });
+            }
+
+            // Cart System
+            function getCart() {
+                try { return JSON.parse(localStorage.getItem('fiad_cart')) || []; }
+                catch { return []; }
+            }
+
+            function saveCart(items) {
+                localStorage.setItem('fiad_cart', JSON.stringify(items));
+            }
+
+            function updateCartUI() {
+                const cart = getCart();
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const countSpan = document.getElementById('cart-count');
+                if (countSpan) {
+                    countSpan.textContent = totalItems;
+                    countSpan.classList.remove('cart-pulse');
+                    void countSpan.offsetWidth;
+                    countSpan.classList.add('cart-pulse');
+                }
+            }
+
+            function addToCart(product) {
+                const cart = getCart();
+                const existing = cart.find(item => item.id == product.id);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ ...product, quantity: 1 });
+                }
+                saveCart(cart);
+                updateCartUI();
+                showToast(`${escapeHtml(product.name)} added to cart!`, 'success');
+            }
+
+            // Toast Notification
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                if (!container) return;
+                const toast = document.createElement('div');
+                const icon = type === 'success' ? 'fa-check-circle text-green-500' : 'fa-exclamation-circle text-red-500';
+                toast.className = 'toast bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg px-4 py-3 flex items-center gap-2 text-sm';
+                toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${escapeHtml(message)}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+
+            // Load Products
+            async function loadProducts() {
+                const spinner = document.getElementById('loading-spinner');
+                const grid = document.getElementById('products-grid');
+                if (!spinner || !grid) return;
+
+                spinner.classList.remove('hidden');
+                grid.classList.add('hidden');
+
+                try {
+                    const products = await fetchProducts();
+                    renderProducts(products);
+                    spinner.classList.add('hidden');
+                    grid.classList.remove('hidden');
+                } catch (error) {
+                    spinner.innerHTML = `
+                        <div class="text-center bg-red-50 dark:bg-red-950/30 p-4 rounded-lg max-w-sm mx-auto" role="alert">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500 text-2xl mb-2"></i>
+                            <p class="text-red-600 dark:text-red-400 text-sm font-medium mb-2">Failed to load products</p>
+                            <button id="retry-products-btn" class="bg-cta-500 hover:bg-cta-600 text-white text-xs font-bold py-2 px-4 rounded transition">
+                                <i class="fa-solid fa-rotate-right mr-1"></i> Retry Now
+                            </button>
+                        </div>
+                    `;
+                    const retryBtn = document.getElementById('retry-products-btn');
+                    if (retryBtn) retryBtn.addEventListener('click', loadProducts);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadProducts);
+            } else {
+                loadProducts();
+            }
+
+            // Init cart UI
+            updateCartUI();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

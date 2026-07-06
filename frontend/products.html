@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>All Products - Fiad Shop</title>
+    <meta name="description" content="Browse all premium products at Fiad Shop. Quality products with privacy & customization.">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://via.placeholder.com https://picsum.photos; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self';">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cta: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-card { transition: all 0.2s ease-in-out; border: 1px solid #e5e7eb; }
+        .dark .custom-card { border-color: #27272a; }
+        .custom-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: #f97316; }
+        .dark .custom-card:hover { border-color: #f97316; box-shadow: 0 0 12px rgba(249,115,22,0.15); }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+        .toast { animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+        .cart-pulse { animation: pulse 0.3s ease-in-out; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .price-tag { color: #ea580c; }
+        .dark .price-tag { color: #fb923c; }
+        /* Active filter style - applied to All button by default */
+        .filter-btn.active-filter {
+            background-color: #f97316 !important;
+            color: white !important;
+            border-color: #f97316 !important;
+        }
+        /* Category scroll container - scrollbar removed */
+        .category-scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        .category-scroll .filter-btn {
+            display: inline-flex;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Home</a>
+                <a href="products.html" class="text-cta-500 dark:text-cta-400 border-b-2 border-cta-500 dark:border-cta-400 pb-1">Products</a>
+                <a href="about.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">About</a>
+                <a href="contact.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 transition hover:scale-105" aria-label="Toggle menu"><i class="fa-solid fa-bars text-sm"></i></button>
+                <a href="login.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition" aria-label="Account"><i class="fa-regular fa-user text-lg"></i></a>
+                <a href="wishlist.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition relative" aria-label="Wishlist"><i class="fa-regular fa-heart text-lg"></i><span id="wishlist-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-md hidden">0</span></a>
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105" aria-label="Toggle dark mode"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span></a>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 px-4 py-3 space-y-2">
+            <a href="index.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Home</a>
+            <a href="products.html" class="block py-2 text-cta-500 dark:text-cta-400 font-medium">Products</a>
+            <a href="about.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">About</a>
+            <a href="contact.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a>
+            <a href="login.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Account</a>
+            <a href="wishlist.html" class="block py-2 text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition">Wishlist</a>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="bg-gray-50 dark:bg-zinc-900 py-6 px-3 border-b border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto">
+            <h1 class="text-xl font-bold">All Products</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Browse our collection of premium products</p>
+        </div>
+    </div>
+
+    <!-- FILTERS & SORT -->
+    <section class="py-4 px-3 border-b border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto">
+            <!-- Category Filters - Horizontal Scroll -->
+            <div class="flex items-center gap-2 mb-3">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 mr-1 flex-shrink-0">Category:</span>
+                <div class="category-scroll flex gap-2">
+                    <button class="filter-btn active-filter px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="all">All</button>
+                    <button class="filter-btn px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="electronics">Electronics</button>
+                    <button class="filter-btn px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="clothing">Clothing</button>
+                    <button class="filter-btn px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="accessories">Accessories</button>
+                    <button class="filter-btn px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="gaming">Gaming</button>
+                    <button class="filter-btn px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="home">Home</button>
+                    <button class="filter-btn px-3 py-1.5 text-xs rounded-full border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition flex-shrink-0" data-filter="sports">Sports</button>
+                </div>
+            </div>
+            <!-- Sort -->
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-medium text-gray-500 dark:text-gray-400 flex-shrink-0">Sort:</span>
+                <select id="sort-select" class="text-xs border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 rounded px-2 py-1.5 focus:ring-2 focus:ring-cta-500 outline-none">
+                    <option value="default">Default</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="name-asc">Name: A-Z</option>
+                    <option value="name-desc">Name: Z-A</option>
+                </select>
+                <span id="product-count" class="text-xs text-gray-400 ml-auto">Showing 9 products</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS GRID -->
+    <section class="py-6 px-3">
+        <div class="container mx-auto">
+            <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+            <div id="no-results" class="hidden text-center py-12">
+                <i class="fa-solid fa-search text-4xl text-gray-300 dark:text-gray-700 mb-3"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">No products found in this category.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGINATION -->
+    <section class="py-4 px-3 border-t border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto flex justify-center gap-2">
+            <button class="px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-500 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition disabled:opacity-50" disabled>&laquo; Prev</button>
+            <button class="px-3 py-1.5 text-xs border border-cta-500 rounded bg-cta-500 text-white font-bold">1</button>
+            <button class="px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition">2</button>
+            <button class="px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition">3</button>
+            <button class="px-3 py-1.5 text-xs border border-gray-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-900 text-gray-500 dark:text-gray-400 hover:border-cta-500 dark:hover:border-cta-500 transition">Next &raquo;</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h4 class="font-bold text-sm mb-3">
+                        <span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP
+                    </h4>
+                    <p class="text-[10px] text-gray-400 dark:text-gray-500 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="about.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">About Us</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a></li>
+                        <li><a href="faq.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">FAQ</a></li>
+                        <li><a href="products.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Shop All</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="privacy.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Terms of Service</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4>
+                    <div class="flex gap-2">
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Twitter"><i class="fa-brands fa-twitter text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="YouTube"><i class="fa-brands fa-youtube text-xs"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center">
+                <p class="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+
+    <script>
+        (function() {
+            // Dark Mode
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            function setTheme(theme) {
+                if (theme === 'dark') { htmlElement.classList.add('dark'); themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
+                else { htmlElement.classList.remove('dark'); themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); }
+                localStorage.setItem('theme', theme);
+            }
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(htmlElement.classList.contains('dark') ? 'light' : 'dark'));
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') setTheme('dark');
+            else if (savedTheme === 'light') setTheme('light');
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            // Mobile Menu
+            document.getElementById('mobile-menu-toggle')?.addEventListener('click', function() {
+                document.getElementById('mobile-menu')?.classList.toggle('hidden');
+            });
+
+            // Products data — hydrated from the API on load (see loadProductsFromApi below).
+            // The initial list serves as offline/preview fallback and reference for shape.
+            let allProducts = [
+                { id: 1, name: "Premium Cotton T-Shirt", price: 24.99, category: "clothing", image_url: "https://picsum.photos/id/20/400/400?grayscale" },
+                { id: 2, name: "Minimalist Analog Watch", price: 89.00, category: "accessories", image_url: "https://picsum.photos/id/82/400/400" },
+                { id: 3, name: "Urban Travel Backpack", price: 55.50, category: "accessories", image_url: "https://picsum.photos/id/123/400/400" },
+                { id: 4, name: "Wireless Noise Earbuds", price: 120.00, category: "electronics", image_url: "https://picsum.photos/id/96/400/400" },
+                { id: 5, name: "Leather Slim Wallet", price: 35.00, category: "accessories", image_url: "https://picsum.photos/id/30/400/400" },
+                { id: 6, name: "Smart Fitness Tracker", price: 49.99, category: "electronics", image_url: "https://picsum.photos/id/143/400/400" },
+                { id: 7, name: "Bluetooth Speaker", price: 65.00, category: "electronics", image_url: "https://picsum.photos/id/29/400/400" },
+                { id: 8, name: "Gaming Mouse Pad", price: 15.00, category: "gaming", image_url: "https://picsum.photos/id/175/400/400" },
+                { id: 9, name: "Wireless Mouse", price: 29.00, category: "electronics", image_url: "https://picsum.photos/id/186/400/400" },
+                { id: 10, name: "Mechanical Keyboard", price: 85.00, category: "gaming", image_url: "https://picsum.photos/id/48/400/400" },
+                { id: 11, name: "Yoga Exercise Mat", price: 22.00, category: "sports", image_url: "https://picsum.photos/id/186/400/400" },
+                { id: 12, name: "Set of Dumbbells", price: 45.00, category: "sports", image_url: "https://picsum.photos/id/123/400/400" },
+                { id: 13, name: "Scented Candle Set", price: 18.50, category: "home", image_url: "https://picsum.photos/id/55/400/400" },
+                { id: 14, name: "Designer Coffee Mug", price: 12.00, category: "home", image_url: "https://picsum.photos/id/35/400/400" },
+                { id: 15, name: "Running Shoes", price: 95.00, category: "sports", image_url: "https://picsum.photos/id/29/400/400" },
+                { id: 16, name: "Denim Jacket", price: 72.00, category: "clothing", image_url: "https://picsum.photos/id/20/400/400" },
+                { id: 17, name: "Gaming Headset", price: 58.00, category: "gaming", image_url: "https://picsum.photos/id/96/400/400" },
+                { id: 18, name: "Office Desk Lamp", price: 34.00, category: "home", image_url: "https://picsum.photos/id/82/400/400" }
+            ];
+
+            let currentFilter = 'all';
+            let currentSort = 'default';
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+            }
+
+            function getCart() { try { return JSON.parse(localStorage.getItem('fiad_cart')) || []; } catch { return []; } }
+            function saveCart(cart) { localStorage.setItem('fiad_cart', JSON.stringify(cart)); }
+
+            function updateCartUI() {
+                const cart = getCart();
+                const total = cart.reduce((s, i) => s + i.quantity, 0);
+                const el = document.getElementById('cart-count');
+                if (el) { el.textContent = total; }
+            }
+
+            function addToCart(product) {
+                const cart = getCart();
+                const exist = cart.find(i => i.id == product.id);
+                if (exist) exist.quantity += 1;
+                else cart.push({ ...product, quantity: 1 });
+                saveCart(cart);
+                updateCartUI();
+                showToast(`${escapeHtml(product.name)} added to cart!`);
+            }
+
+            function showToast(msg) {
+                const c = document.getElementById('toast-container');
+                if (!c) return;
+                const t = document.createElement('div');
+                t.className = 'toast bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg px-4 py-3 flex items-center gap-2 text-sm';
+                t.innerHTML = `<i class="fa-solid fa-check-circle text-green-500"></i><span>${escapeHtml(msg)}</span>`;
+                c.appendChild(t);
+                setTimeout(() => t.remove(), 3000);
+            }
+
+            function filterAndSortProducts() {
+                let filtered = currentFilter === 'all' ? [...allProducts] : allProducts.filter(p => p.category === currentFilter);
+                
+                switch(currentSort) {
+                    case 'price-asc': filtered.sort((a, b) => a.price - b.price); break;
+                    case 'price-desc': filtered.sort((a, b) => b.price - a.price); break;
+                    case 'name-asc': filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+                    case 'name-desc': filtered.sort((a, b) => b.name.localeCompare(a.name)); break;
+                }
+                
+                return filtered;
+            }
+
+            function renderProducts() {
+                const products = filterAndSortProducts();
+                const grid = document.getElementById('products-grid');
+                const noResults = document.getElementById('no-results');
+                const countEl = document.getElementById('product-count');
+
+                if (!grid) return;
+
+                if (products.length === 0) {
+                    grid.innerHTML = '';
+                    noResults?.classList.remove('hidden');
+                    if (countEl) countEl.textContent = 'Showing 0 products';
+                    return;
+                }
+
+                noResults?.classList.add('hidden');
+                if (countEl) countEl.textContent = `Showing ${products.length} products`;
+
+                grid.innerHTML = products.map(p => `
+                    <div class="custom-card bg-white dark:bg-zinc-900 rounded-md flex flex-col h-full overflow-hidden">
+                        <a href="product-detail.html?id=${p.id}" class="relative w-full aspect-square overflow-hidden bg-gray-100 dark:bg-zinc-800 block">
+                            <img src="${p.image_url}" alt="${escapeHtml(p.name)}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Fiad+Shop'">
+                        </a>
+                        <div class="p-2 flex flex-col flex-grow">
+                            <span class="text-[9px] uppercase tracking-wider text-cta-500 dark:text-cta-400 font-medium mb-0.5">${p.category}</span>
+                            <a href="product-detail.html?id=${p.id}">
+                                <h3 class="text-xs font-medium text-gray-800 dark:text-gray-200 mb-1 line-clamp-2 leading-tight min-h-[2rem] hover:text-cta-500 dark:hover:text-cta-400 transition">${escapeHtml(p.name)}</h3>
+                            </a>
+                            <p class="price-tag font-bold text-sm mb-2">$${p.price.toFixed(2)}</p>
+                            <button class="add-to-cart-btn w-full py-1.5 bg-cta-500 text-white rounded text-xs font-bold hover:bg-cta-600 transition" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}" aria-label="Add ${escapeHtml(p.name)} to cart">
+                                <i class="fa-solid fa-cart-plus mr-1"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        addToCart({ id: btn.getAttribute('data-id'), name: btn.getAttribute('data-name'), price: parseFloat(btn.getAttribute('data-price')) });
+                    });
+                });
+            }
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
+                    this.classList.add('active-filter');
+                    currentFilter = this.getAttribute('data-filter');
+                    renderProducts();
+                });
+            });
+
+            // Sort
+            document.getElementById('sort-select')?.addEventListener('change', function() {
+                currentSort = this.value;
+                renderProducts();
+            });
+
+            // ---- FIAD SHOP: hydrate from live API ---------------------------------
+            // Honours query params:  ?filter=<category>   ?ref=<promoCode>   ?q=<search>
+            async function loadProductsFromApi() {
+                const params = new URLSearchParams(location.search);
+                const filterFromUrl = (params.get('filter') || '').toLowerCase();
+                const q = params.get('q') || '';
+                const ref = params.get('ref');
+                if (ref) try { localStorage.setItem('fiad_ref', ref); } catch {}
+                if (filterFromUrl) currentFilter = filterFromUrl;
+
+                try {
+                    const { items } = await window.FiadAPI.api.get(
+                      '/products?limit=100' + (q ? '&q=' + encodeURIComponent(q) : '')
+                    );
+                    if (items && items.length) {
+                        allProducts = items.map(p => ({
+                            id: p.id,
+                            name: p.name,
+                            price: Number(p.basePrice),
+                            category: (p.category || 'general').toLowerCase(),
+                            image_url: (Array.isArray(p.images) && p.images[0]) || 'https://picsum.photos/400',
+                        }));
+                    }
+                } catch (e) {
+                    console.warn('[products] API unreachable, using demo data:', e.message);
+                    window.FiadAPI?.toast('Showing demo products (backend offline)', 'warn');
+                }
+                renderProducts();
+            }
+
+            // Init
+            renderProducts();          // paint fallback immediately (perceived speed)
+            loadProductsFromApi();     // then swap in the real data
+            updateCartUI();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Fiad AI - Chat Assistant</title>
+    <meta name="description" content="Chat with Fiad AI — your Fiad Shop assistant for orders, shipping, returns, products and more.">
+    <meta name="robots" content="noindex, follow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: { 'xs': '480px' },
+                    colors: {
+                        cta: { 50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',800:'#9a3412',900:'#7c2d12' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+
+        .chat-scroll::-webkit-scrollbar { width: 6px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+        .dark .chat-scroll::-webkit-scrollbar-thumb { background: #3f3f46; }
+
+        .bubble-in  { animation: bubbleIn .25s ease-out; }
+        @keyframes bubbleIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+        .typing-dot {
+            display: inline-block; width: 6px; height: 6px; margin: 0 1px;
+            background: currentColor; border-radius: 50%;
+            animation: typing 1.2s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: .15s; }
+        .typing-dot:nth-child(3) { animation-delay: .30s; }
+        @keyframes typing { 0%,80%,100% { transform: scale(.4); opacity:.3;} 40% { transform: scale(1); opacity:1; } }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col">
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html"    class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Products</a>
+                <a href="ai.html"       class="text-cta-500 dark:text-cta-400 border-b-2 border-cta-500 dark:border-cta-400 pb-1">Fiad AI</a>
+                <a href="contact.html"  class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105 focus:outline-none" aria-label="Toggle dark mode">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative cursor-pointer group" aria-label="Shopping cart">
+                    <i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HEADER STRIP ===== -->
+    <section class="py-4 px-3 border-b border-gray-100 dark:border-zinc-900">
+        <div class="container mx-auto flex items-center gap-3">
+            <div class="relative w-12 h-12 rounded-full bg-cta-500 flex items-center justify-center text-white shadow-lg shadow-cta-500/30">
+                <i class="fa-solid fa-robot text-lg"></i>
+                <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full ring-2 ring-white dark:ring-black"></span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h1 class="text-base sm:text-lg font-bold leading-tight">Fiad AI <span class="text-xs font-normal text-gray-400">· Assistant</span></h1>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400">Ask me about orders, shipping, returns, payments, or products.</p>
+            </div>
+            <button id="new-chat-btn" class="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-zinc-700 transition">
+                <i class="fa-solid fa-rotate-right text-[10px]"></i> New chat
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== CHAT AREA ===== -->
+    <main class="flex-1 flex flex-col">
+        <div class="container mx-auto w-full max-w-3xl flex-1 flex flex-col px-3 pt-4 pb-32">
+
+            <!-- Suggestion chips (only visible before first message) -->
+            <div id="chip-row" class="flex flex-wrap gap-2 mb-4">
+                <button class="chip text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-cta-500 hover:text-white transition" data-q="How long does shipping take?">🚚 Shipping times</button>
+                <button class="chip text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-cta-500 hover:text-white transition" data-q="What is your return policy?">↩️ Return policy</button>
+                <button class="chip text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-cta-500 hover:text-white transition" data-q="What payment methods do you accept?">💳 Payment methods</button>
+                <button class="chip text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-cta-500 hover:text-white transition" data-q="How do I become an affiliate?">🎯 Affiliate program</button>
+                <button class="chip text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-cta-500 hover:text-white transition" data-q="How do I track my order?">📦 Track an order</button>
+            </div>
+
+            <div id="chat-log" class="flex-1 flex flex-col gap-3 chat-scroll overflow-y-auto"></div>
+        </div>
+    </main>
+
+    <!-- ===== INPUT DOCK (sticky bottom) ===== -->
+    <div class="fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-sm border-t border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto max-w-3xl px-3 py-3">
+            <form id="chat-form" class="flex items-end gap-2">
+                <div class="flex-1 relative">
+                    <textarea id="chat-input" rows="1" maxlength="2000" placeholder="Ask Fiad AI anything…"
+                        class="w-full resize-none px-4 py-3 pr-12 rounded-2xl bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500 focus:border-transparent"></textarea>
+                    <div id="char-count" class="absolute right-3 bottom-2 text-[10px] text-gray-400">0 / 2000</div>
+                </div>
+                <button id="send-btn" type="submit" class="h-11 px-5 rounded-2xl bg-cta-500 hover:bg-cta-600 text-white font-bold text-sm shadow-lg shadow-cta-500/30 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500 text-center mt-2">
+                Fiad AI can make mistakes. For order-specific issues,
+                <a href="contact.html" class="text-cta-500 hover:underline">contact support</a>.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+
+    <script>
+    (function () {
+        const { api, toast, escapeHtml } = window.FiadAPI;
+        const log      = document.getElementById('chat-log');
+        const form     = document.getElementById('chat-form');
+        const input    = document.getElementById('chat-input');
+        const sendBtn  = document.getElementById('send-btn');
+        const charCnt  = document.getElementById('char-count');
+        const chipRow  = document.getElementById('chip-row');
+
+        // Session persists for the tab
+        const sessionId = sessionStorage.getItem('fiad_ai_session')
+            || ('ai-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8));
+        sessionStorage.setItem('fiad_ai_session', sessionId);
+        const history = []; // { role: 'user'|'assistant', content }
+
+        function scrollBottom() { log.scrollTop = log.scrollHeight; window.scrollTo(0, document.body.scrollHeight); }
+
+        function pushWelcome() {
+            log.innerHTML = `
+              <div class="bubble-in flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-cta-500 text-white flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-robot text-xs"></i>
+                </div>
+                <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tl-sm bg-gray-100 dark:bg-zinc-900 text-sm leading-relaxed">
+                    Hi! I'm <b>Fiad AI</b>. I can help with shipping, returns, payments, products, or your account.
+                    What can I answer for you today?
+                </div>
+              </div>`;
+        }
+
+        function pushUser(text) {
+            const el = document.createElement('div');
+            el.className = 'bubble-in flex items-start justify-end gap-3';
+            el.innerHTML = `
+                <div class="max-w-[85%] px-4 py-3 rounded-2xl rounded-tr-sm bg-cta-500 text-white text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(text)}</div>
+                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-700 text-gray-600 dark:text-gray-300 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-user text-xs"></i>
+                </div>`;
+            log.appendChild(el); scrollBottom();
+        }
+
+        function pushAssistant(text, source) {
+            const el = document.createElement('div');
+            el.className = 'bubble-in flex items-start gap-3';
+            const badge = source
+              ? `<span class="ml-2 text-[9px] uppercase tracking-wider text-gray-400">${source === 'KB' ? 'Knowledge base' : 'Fiad AI'}</span>`
+              : '';
+            el.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-cta-500 text-white flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-robot text-xs"></i>
+                </div>
+                <div class="max-w-[85%]">
+                    <div class="px-4 py-3 rounded-2xl rounded-tl-sm bg-gray-100 dark:bg-zinc-900 text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(text)}</div>
+                    <div class="text-[10px] text-gray-400 mt-1 ml-1">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${badge}</div>
+                </div>`;
+            log.appendChild(el); scrollBottom();
+        }
+
+        function pushTyping() {
+            const el = document.createElement('div');
+            el.id = 'typing-bubble';
+            el.className = 'bubble-in flex items-start gap-3';
+            el.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-cta-500 text-white flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-robot text-xs"></i>
+                </div>
+                <div class="px-4 py-3 rounded-2xl rounded-tl-sm bg-gray-100 dark:bg-zinc-900 text-cta-500">
+                    <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+                </div>`;
+            log.appendChild(el); scrollBottom();
+        }
+
+        function removeTyping() {
+            document.getElementById('typing-bubble')?.remove();
+        }
+
+        async function send(text) {
+            if (!text || !text.trim()) return;
+            if (chipRow) chipRow.style.display = 'none';
+            pushUser(text);
+            history.push({ role: 'user', content: text });
+            input.value = ''; charCnt.textContent = '0 / 2000';
+            input.style.height = 'auto';
+            sendBtn.disabled = true;
+            pushTyping();
+
+            try {
+                const res = await api.post('/ai/chat', {
+                    sessionId, message: text, history: history.slice(0, -1),
+                });
+                removeTyping();
+                pushAssistant(res.answer, res.source);
+                history.push({ role: 'assistant', content: res.answer });
+            } catch (e) {
+                removeTyping();
+                pushAssistant(
+                    e.message ||
+                    "I'm having trouble reaching my brain right now. Please try again in a moment or email support@fiad.shop."
+                );
+                toast(e.message || 'AI unavailable', 'error');
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        // Auto-resize textarea
+        input.addEventListener('input', () => {
+            charCnt.textContent = input.value.length + ' / 2000';
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 180) + 'px';
+        });
+
+        // Submit on Enter (Shift+Enter = newline)
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                form.requestSubmit();
+            }
+        });
+        form.addEventListener('submit', (e) => { e.preventDefault(); send(input.value); });
+
+        // Suggestion chips
+        chipRow.querySelectorAll('.chip').forEach(c => {
+            c.addEventListener('click', () => send(c.getAttribute('data-q')));
+        });
+
+        // New chat
+        document.getElementById('new-chat-btn')?.addEventListener('click', () => {
+            sessionStorage.removeItem('fiad_ai_session');
+            history.length = 0;
+            log.innerHTML = '';
+            chipRow.style.display = '';
+            pushWelcome();
+        });
+
+        pushWelcome();
+        input.focus();
+    })();
+    </script>
+</body>
+</html>

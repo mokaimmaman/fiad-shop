@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Affiliate Dashboard - Fiad Shop</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: { 'xs': '480px' },
+                    colors: { cta: { 50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',800:'#9a3412',900:'#7c2d12' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+        .stat-card {
+            transition: all .25s ease; border: 1px solid #e5e7eb;
+        }
+        .dark .stat-card { border-color: #27272a; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.08); border-color: #f97316; }
+        .dark .stat-card:hover { box-shadow: 0 0 15px rgba(249,115,22,.15); }
+        .level-badge {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+        .modal { animation: fadeIn .18s ease-out; }
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                <span class="text-cta-500 dark:text-cta-400">FIAD</span>
+                <span class="text-gray-900 dark:text-white">SHOP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html"    class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Products</a>
+                <a href="affiliate-dashboard.html" class="text-cta-500 dark:text-cta-400 border-b-2 border-cta-500 dark:border-cta-400 pb-1">Dashboard</a>
+                <a href="contact.html"  class="text-gray-600 dark:text-gray-400 hover:text-cta-500 dark:hover:text-cta-400 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition-all hover:scale-105 focus:outline-none" aria-label="Toggle dark mode">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative cursor-pointer group" aria-label="Shopping cart">
+                    <i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== NOT AUTHENTICATED / NOT AFFILIATE STATES ===== -->
+    <div id="gate-loading" class="py-20 text-center text-gray-500 dark:text-gray-400">
+        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
+        <p class="text-sm">Loading your dashboard…</p>
+    </div>
+    <div id="gate-guest" class="hidden py-16 px-4 text-center">
+        <div class="container mx-auto max-w-md bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6">
+            <i class="fa-solid fa-lock text-cta-500 text-3xl mb-3"></i>
+            <h2 class="font-bold text-lg mb-1">Sign in required</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Please log in to view your affiliate dashboard.</p>
+            <a href="login.html" class="inline-block bg-cta-500 hover:bg-cta-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition">Go to Login</a>
+        </div>
+    </div>
+    <div id="gate-not-affiliate" class="hidden py-16 px-4 text-center">
+        <div class="container mx-auto max-w-md bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-6">
+            <i class="fa-solid fa-rocket text-cta-500 text-3xl mb-3"></i>
+            <h2 class="font-bold text-lg mb-1">Open a Pro Account</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Become a Fiad affiliate to earn commission on every referred sale.</p>
+            <button id="apply-btn" class="inline-block bg-cta-500 hover:bg-cta-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition">Apply now — it's free</button>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <main id="dashboard" class="hidden py-6 px-3 pb-14">
+        <div class="container mx-auto max-w-6xl space-y-6">
+
+            <!-- Header + level pill -->
+            <div class="flex items-center gap-3 flex-wrap">
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold leading-tight">Affiliate Dashboard</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400" id="hello-line">Welcome back.</p>
+                </div>
+                <span id="level-pill" class="level-badge ml-auto text-white text-xs font-bold px-3 py-1.5 rounded-full inline-flex items-center gap-2">
+                    <i class="fa-solid fa-crown"></i> <span id="level-name">BRONZE</span>
+                </span>
+                <span id="type-pill" class="text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300">Regular</span>
+                <span id="status-pill" class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">Active</span>
+            </div>
+
+            <!-- Notices from admin -->
+            <div id="notices" class="hidden bg-cta-50 dark:bg-cta-900/20 border border-cta-200 dark:border-cta-800 rounded-xl p-4">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-cta-600 dark:text-cta-400 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </h4>
+                <ul id="notices-list" class="space-y-1.5 text-sm"></ul>
+            </div>
+
+            <!-- Stats row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Total Sales</p>
+                    <p class="text-2xl font-bold" id="stat-sales">0</p>
+                </div>
+                <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Total Earned</p>
+                    <p class="text-2xl font-bold text-cta-500" id="stat-earned">$0.00</p>
+                </div>
+                <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Available Balance</p>
+                    <p class="text-2xl font-bold text-green-600 dark:text-green-400" id="stat-balance">$0.00</p>
+                </div>
+                <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">Commission Rate</p>
+                    <p class="text-2xl font-bold" id="stat-commission">—</p>
+                </div>
+            </div>
+
+            <!-- Level progress -->
+            <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-5">
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-0.5">Level progress</p>
+                        <p class="text-sm font-bold"><span id="progress-current">Bronze</span> → <span id="progress-next" class="text-cta-500">Silver</span></p>
+                    </div>
+                    <span class="text-xs text-gray-500" id="progress-remaining">10 sales to next</span>
+                </div>
+                <div class="h-2.5 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-cta-500 transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Actions row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <button id="open-promo-modal" class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4 text-left hover:bg-cta-50 dark:hover:bg-cta-900/10 transition">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-cta-100 dark:bg-cta-900/30 text-cta-600 dark:text-cta-400 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-tag"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold">Customize Link / Promo</p>
+                            <p class="text-[11px] text-gray-500 mt-0.5" id="promo-status">Not set — pick a custom code (once)</p>
+                        </div>
+                    </div>
+                </button>
+
+                <button id="open-discount-modal" class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4 text-left hover:bg-cta-50 dark:hover:bg-cta-900/10 transition">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-cta-100 dark:bg-cta-900/30 text-cta-600 dark:text-cta-400 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-scissors"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold">Give a Discount</p>
+                            <p class="text-[11px] text-gray-500 mt-0.5">Share part of your commission as a discount</p>
+                        </div>
+                    </div>
+                </button>
+
+                <button id="open-withdraw-modal" class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-4 text-left hover:bg-cta-50 dark:hover:bg-cta-900/10 transition">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-cta-100 dark:bg-cta-900/30 text-cta-600 dark:text-cta-400 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold">Withdraw Funds</p>
+                            <p class="text-[11px] text-gray-500 mt-0.5">Request a payout from your balance</p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Two-column: recent orders + discount links -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-5">
+                    <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-receipt text-cta-500"></i> Recent Referred Orders
+                    </h3>
+                    <div id="recent-orders" class="text-sm">
+                        <p class="text-xs text-gray-400 text-center py-6">No sales yet — share your promo code!</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-5">
+                    <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-link text-cta-500"></i> Your Discount Links
+                    </h3>
+                    <div id="discount-links" class="space-y-2 text-sm">
+                        <p class="text-xs text-gray-400 text-center py-6">No discount links yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdrawals history -->
+            <div class="stat-card bg-white dark:bg-zinc-900 rounded-xl p-5">
+                <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-cta-500"></i> Withdrawal History
+                </h3>
+                <div id="withdrawals" class="text-sm">
+                    <p class="text-xs text-gray-400 text-center py-6">No withdrawals yet.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== MODALS ===== -->
+    <!-- Promo code modal -->
+    <div id="promo-modal" class="hidden fixed inset-0 z-[95] bg-black/50 flex items-center justify-center p-4">
+        <div class="modal bg-white dark:bg-zinc-900 rounded-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-base">Customize your promo code</h3>
+                <button data-close class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">Pick a memorable code (3–20 characters, letters/numbers/_-). <b>This can only be set once</b> — contact support to change it later.</p>
+            <div class="flex gap-2">
+                <input id="promo-input" type="text" maxlength="20" placeholder="MY-CODE" class="flex-1 uppercase px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                <button id="promo-save" class="bg-cta-500 hover:bg-cta-600 text-white font-bold px-4 rounded-lg text-sm">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discount link modal -->
+    <div id="discount-modal" class="hidden fixed inset-0 z-[95] bg-black/50 flex items-center justify-center p-4">
+        <div class="modal bg-white dark:bg-zinc-900 rounded-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-base">Create discount link</h3>
+                <button data-close class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">
+                You can give up to <span id="max-discount" class="font-bold text-cta-500">10%</span> off (your commission rate).
+                Whatever you give the buyer is deducted from your commission on that sale.
+            </p>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-medium mb-1 block">Discount % to buyer *</label>
+                    <input id="discount-pct" type="number" min="1" max="50" step="0.5" placeholder="5"
+                        class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                    <p class="text-[10px] text-gray-500 mt-1">You'll keep <span id="keep-pct" class="font-bold text-green-600">5%</span> of the sale.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs font-medium mb-1 block">Max uses (opt.)</label>
+                        <input id="discount-max" type="number" min="1" placeholder="∞" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium mb-1 block">Expires (opt.)</label>
+                        <input id="discount-exp" type="date" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                    </div>
+                </div>
+                <button id="discount-save" class="w-full bg-cta-500 hover:bg-cta-600 text-white font-bold py-2.5 rounded-lg text-sm">Generate link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdrawal modal -->
+    <div id="withdraw-modal" class="hidden fixed inset-0 z-[95] bg-black/50 flex items-center justify-center p-4">
+        <div class="modal bg-white dark:bg-zinc-900 rounded-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-base">Request withdrawal</h3>
+                <button data-close class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-gray-500 mb-4">Available: <span id="withdraw-avail" class="font-bold text-green-600">$0.00</span>. Payouts are processed within 3 business days.</p>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-medium mb-1 block">Amount (USD) *</label>
+                    <input id="wd-amount" type="number" min="1" step="0.01" placeholder="25.00" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-medium mb-1 block">Method *</label>
+                    <select id="wd-method" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                        <option>USDT_TRC20</option>
+                        <option>USDT_BEP20</option>
+                        <option>BTC</option>
+                        <option>ETH</option>
+                        <option>PAYPAL</option>
+                        <option>BANK</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-medium mb-1 block">Destination *</label>
+                    <input id="wd-dest" type="text" placeholder="Wallet address / PayPal email / bank details" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none">
+                </div>
+                <button id="wd-save" class="w-full bg-cta-500 hover:bg-cta-600 text-white font-bold py-2.5 rounded-lg text-sm">Submit request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+
+    <script>
+    (function () {
+        const { api, toast, escapeHtml } = window.FiadAPI;
+        let state = null; // dashboard payload
+        let maxDiscount = 10; // updated after load
+
+        function money(n) { return '$' + Number(n || 0).toFixed(2); }
+        function show(id) { document.getElementById(id).classList.remove('hidden'); }
+        function hide(id) { document.getElementById(id).classList.add('hidden'); }
+
+        async function boot() {
+            const user = window.FiadAuth.getUser();
+            if (!user) {
+                await window.FiadAuth.refreshMe(); // in case token exists but user not cached
+            }
+            if (!window.FiadAuth.isLoggedIn()) {
+                hide('gate-loading'); show('gate-guest'); return;
+            }
+            try {
+                await load();
+            } catch (e) {
+                if (e.status === 404 || /affiliate/i.test(e.message)) {
+                    hide('gate-loading'); show('gate-not-affiliate');
+                } else {
+                    hide('gate-loading');
+                    toast(e.message || 'Failed to load dashboard', 'error');
+                }
+            }
+        }
+
+        async function load() {
+            const data = await api.get('/affiliate/dashboard');
+            state = data;
+            hide('gate-loading');
+            show('dashboard');
+            render();
+        }
+
+        function render() {
+            const a = state.affiliate;
+            const p = state.progress;
+
+            document.getElementById('hello-line').textContent =
+                'Welcome back, ' + (window.FiadAuth.getUser()?.displayName || 'friend') + '.';
+            document.getElementById('level-name').textContent = a.level;
+            document.getElementById('type-pill').textContent = a.type === 'INFLUENCER' ? 'Influencer' : 'Regular';
+            document.getElementById('status-pill').textContent = a.status;
+            document.getElementById('status-pill').className =
+              'text-xs font-bold px-3 py-1.5 rounded-full ' +
+              (a.status === 'ACTIVE' ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                : a.status === 'SUSPENDED' ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400'
+                : 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400');
+
+            document.getElementById('stat-sales').textContent = a.totalSales || 0;
+            document.getElementById('stat-earned').textContent = money(a.totalEarned);
+            document.getElementById('stat-balance').textContent = money(a.balance);
+            document.getElementById('stat-commission').textContent =
+              (a.commissionRate == null ? 'Per product' : Number(a.commissionRate).toFixed(1) + '%');
+
+            document.getElementById('progress-current').textContent = capitalize(p.current);
+            document.getElementById('progress-next').textContent =
+              p.next ? capitalize(p.next) : 'Max tier';
+            document.getElementById('progress-remaining').textContent =
+              p.next ? (p.salesToNext + ' sales to next') : 'Maxed';
+            document.getElementById('progress-bar').style.width = Math.min(100, p.progressPct) + '%';
+
+            // Promo status
+            document.getElementById('promo-status').textContent = a.promoCode
+              ? 'Your code: ' + a.promoCode + (a.promoCodeLocked ? ' (locked)' : '')
+              : 'Not set — pick a custom code (once)';
+
+            // Max discount pct = commission rate or 10 default
+            maxDiscount = a.commissionRate != null ? Number(a.commissionRate) : 10;
+            document.getElementById('max-discount').textContent = maxDiscount + '%';
+
+            // Notices
+            const notices = state.notices || [];
+            if (notices.length) {
+                show('notices');
+                document.getElementById('notices-list').innerHTML = notices.map(n => `
+                    <li class="text-xs flex items-start gap-2">
+                        <i class="fa-solid fa-caret-right text-cta-500 mt-0.5"></i>
+                        <span><b>${escapeHtml(n.title)}</b> — ${escapeHtml(n.body)}</span>
+                    </li>
+                `).join('');
+            }
+
+            // Recent orders
+            const rOrders = state.recentOrders || [];
+            const ro = document.getElementById('recent-orders');
+            if (rOrders.length) {
+                ro.innerHTML = `
+                <div class="divide-y divide-gray-100 dark:divide-zinc-800">
+                    ${rOrders.map(o => `
+                    <div class="flex items-center justify-between py-2.5">
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold truncate">${escapeHtml(o.orderNumber)}</p>
+                            <p class="text-[10px] text-gray-500">${new Date(o.createdAt).toLocaleString()}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold">${money(o.total)}</p>
+                            <p class="text-[10px] text-gray-500">${o.status}</p>
+                        </div>
+                    </div>`).join('')}
+                </div>`;
+            }
+
+            // Discount links
+            const dls = state.discountLinks || [];
+            const dl = document.getElementById('discount-links');
+            if (dls.length) {
+                const base = location.origin + location.pathname.replace(/[^/]*$/, '');
+                dl.innerHTML = dls.map(l => {
+                    const url = base + 'products.html?ref=' + encodeURIComponent(l.code);
+                    return `
+                    <div class="border border-gray-200 dark:border-zinc-800 rounded-lg p-3">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <code class="text-xs font-bold text-cta-500">${escapeHtml(l.code)}</code>
+                            <span class="text-[10px] text-gray-500">${Number(l.discountPercent)}% off · you keep ${Number(l.affiliateKeepPercent)}%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input readonly value="${url}" class="flex-1 text-[10px] px-2 py-1 rounded bg-gray-50 dark:bg-zinc-950 border border-gray-100 dark:border-zinc-800">
+                            <button data-copy="${escapeHtml(url)}" class="text-cta-500 hover:text-cta-600 text-xs px-2 py-1 rounded"><i class="fa-solid fa-copy"></i></button>
+                        </div>
+                        <p class="text-[10px] text-gray-500 mt-1">${l.uses} uses${l.maxUses ? ' / ' + l.maxUses : ''}${l.expiresAt ? ' · expires ' + new Date(l.expiresAt).toLocaleDateString() : ''}</p>
+                    </div>`;
+                }).join('');
+                dl.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+                    navigator.clipboard.writeText(b.getAttribute('data-copy'));
+                    toast('Link copied', 'success');
+                }));
+            }
+
+            // Withdrawals
+            const wds = state.withdrawals || [];
+            const wd = document.getElementById('withdrawals');
+            if (wds.length) {
+                wd.innerHTML = `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead class="text-left text-gray-500 border-b border-gray-100 dark:border-zinc-800">
+                            <tr><th class="py-2">Date</th><th>Amount</th><th>Method</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                        ${wds.map(w => `
+                            <tr class="border-b border-gray-50 dark:border-zinc-900">
+                                <td class="py-2">${new Date(w.createdAt).toLocaleDateString()}</td>
+                                <td class="font-bold">${money(w.amount)}</td>
+                                <td>${escapeHtml(w.method)}</td>
+                                <td><span class="px-2 py-0.5 rounded-full text-[10px] ${statusColor(w.status)}">${w.status}</span></td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            document.getElementById('withdraw-avail').textContent = money(a.balance);
+        }
+
+        function statusColor(s) {
+            return s === 'PAID'      ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                 : s === 'APPROVED'  ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                 : s === 'REJECTED'  ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400'
+                 :                     'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400';
+        }
+        function capitalize(s) { return String(s || '').toLowerCase().replace(/^./, c => c.toUpperCase()); }
+
+        // ---- Apply flow (for USER, not yet AFFILIATE) ---------------------------
+        document.getElementById('apply-btn').addEventListener('click', async () => {
+            try {
+                await api.post('/affiliate/apply', {});
+                toast('You are now an affiliate!', 'success');
+                await window.FiadAuth.refreshMe();
+                hide('gate-not-affiliate');
+                show('gate-loading');
+                await load();
+            } catch (e) { toast(e.message || 'Could not apply', 'error'); }
+        });
+
+        // ---- Modals -----------------------------------------------------------
+        function bindModal(id, openBtnId) {
+            const modal = document.getElementById(id);
+            document.getElementById(openBtnId).addEventListener('click', () => modal.classList.remove('hidden'));
+            modal.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => modal.classList.add('hidden')));
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+        }
+        bindModal('promo-modal',    'open-promo-modal');
+        bindModal('discount-modal', 'open-discount-modal');
+        bindModal('withdraw-modal', 'open-withdraw-modal');
+
+        // Promo save
+        document.getElementById('promo-save').addEventListener('click', async () => {
+            const code = document.getElementById('promo-input').value.trim();
+            if (code.length < 3) return toast('Code must be at least 3 characters', 'warn');
+            try {
+                await api.post('/affiliate/promo-code', { code });
+                toast('Promo code saved!', 'success');
+                document.getElementById('promo-modal').classList.add('hidden');
+                await load();
+            } catch (e) { toast(e.message || 'Failed', 'error'); }
+        });
+
+        // Discount live-preview
+        const dPct = document.getElementById('discount-pct');
+        dPct.addEventListener('input', () => {
+            const v = Math.max(0, Math.min(Number(dPct.value) || 0, maxDiscount));
+            document.getElementById('keep-pct').textContent = Math.max(0, maxDiscount - v).toFixed(1) + '%';
+        });
+        document.getElementById('discount-save').addEventListener('click', async () => {
+            const discountPercent = Number(dPct.value);
+            if (!discountPercent || discountPercent <= 0) return toast('Enter a discount %', 'warn');
+            if (discountPercent > maxDiscount) return toast('Max is ' + maxDiscount + '%', 'warn');
+            const maxUses  = Number(document.getElementById('discount-max').value) || undefined;
+            const expiresAtDate = document.getElementById('discount-exp').value;
+            const expiresAt = expiresAtDate ? new Date(expiresAtDate + 'T23:59:59Z').toISOString() : undefined;
+            try {
+                await api.post('/affiliate/discount-link', { discountPercent, maxUses, expiresAt });
+                toast('Discount link created!', 'success');
+                document.getElementById('discount-modal').classList.add('hidden');
+                await load();
+            } catch (e) { toast(e.message || 'Failed', 'error'); }
+        });
+
+        // Withdraw
+        document.getElementById('wd-save').addEventListener('click', async () => {
+            const amount = Number(document.getElementById('wd-amount').value);
+            const method = document.getElementById('wd-method').value;
+            const destination = document.getElementById('wd-dest').value.trim();
+            if (!amount || amount <= 0) return toast('Enter an amount', 'warn');
+            if (!destination) return toast('Enter your destination', 'warn');
+            try {
+                await api.post('/affiliate/withdraw', { amount, method, destination });
+                toast('Withdrawal requested!', 'success');
+                document.getElementById('withdraw-modal').classList.add('hidden');
+                await load();
+            } catch (e) { toast(e.message || 'Failed', 'error'); }
+        });
+
+        boot();
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sign In - Fiad Shop</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { cta: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 4px; }
+        .tab-btn.active { border-bottom: 2px solid #f97316; color: #f97316; }
+        .toast { animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition"><span class="text-cta-500 dark:text-cta-400">FIAD</span><span class="text-gray-900 dark:text-white">SHOP</span></a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 transition pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 transition pb-1">Products</a>
+                <a href="about.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 transition pb-1">About</a>
+                <a href="contact.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 transition pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition hover:scale-105"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative"><i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-gray-50 dark:bg-zinc-900 py-6 px-3 border-b border-gray-200 dark:border-zinc-800">
+        <div class="container mx-auto text-center">
+            <h1 class="text-xl font-bold">My Account</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Sign in or create your account</p>
+        </div>
+    </div>
+
+    <div class="border-b border-gray-200 dark:border-zinc-800 px-3 bg-white dark:bg-zinc-950">
+        <div class="container mx-auto max-w-md flex gap-6">
+            <button class="tab-btn active text-sm font-medium pb-2 text-cta-500 border-b-2 border-cta-500" data-tab="login">Sign In</button>
+            <button class="tab-btn text-sm font-medium pb-2 text-gray-500 dark:text-gray-400 hover:text-cta-500 transition" data-tab="register">Register</button>
+        </div>
+    </div>
+
+    <section class="px-3 py-8">
+        <div class="container mx-auto max-w-md">
+            <div id="login-tab" class="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 p-6">
+                <h3 class="font-bold text-lg mb-1">Welcome Back</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Sign in to your Fiad Shop account</p>
+                <form id="login-form" novalidate>
+                    <div class="space-y-3">
+                        <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Email</label><input id="login-email" type="email" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="your@email.com" required></div>
+                        <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Password</label><input id="login-password" type="password" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="••••••••" required></div>
+                        <div id="login-2fa-wrap" class="hidden">
+                            <label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">2FA code</label>
+                            <input id="login-2fa" type="text" inputmode="numeric" maxlength="6" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm tracking-widest text-center font-mono focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="123456">
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <label class="flex items-center gap-2 text-xs text-gray-500 cursor-pointer"><input type="checkbox" class="accent-cta-500 w-3.5 h-3.5"> Remember me</label>
+                            <a href="#" id="forgot-link" class="text-xs text-cta-500 hover:underline">Forgot password?</a>
+                        </div>
+                        <button type="submit" id="login-submit" class="w-full py-3 bg-cta-500 hover:bg-cta-600 text-white rounded-lg text-sm font-bold transition shadow-lg shadow-cta-500/30"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Sign In</button>
+                    </div>
+                </form>
+
+                <!-- OTP verification (shown after register or when server says NOT_VERIFIED) -->
+                <div id="otp-panel" class="hidden mt-4 p-4 border border-cta-200 dark:border-cta-900 bg-cta-50 dark:bg-cta-900/20 rounded-lg">
+                    <h4 class="text-sm font-bold mb-1">Verify your email</h4>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">We sent a 6-digit code to <span id="otp-email" class="font-medium"></span>. It expires in 5 minutes.</p>
+                    <div class="flex gap-2">
+                        <input id="otp-input" type="text" inputmode="numeric" maxlength="6" class="flex-1 px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm text-center tracking-[0.4em] font-mono focus:ring-2 focus:ring-cta-500 outline-none" placeholder="••••••">
+                        <button id="otp-submit" class="bg-cta-500 hover:bg-cta-600 text-white font-bold px-4 rounded-lg text-sm">Verify</button>
+                    </div>
+                    <button id="otp-resend" class="mt-2 text-xs text-cta-500 hover:underline">Resend code</button>
+                </div>
+
+                <!-- Forgot password modal-panel -->
+                <div id="forgot-panel" class="hidden mt-4 p-4 border border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-950 rounded-lg">
+                    <h4 class="text-sm font-bold mb-1">Reset password</h4>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-3">Enter the email tied to your account. We'll send you a reset link.</p>
+                    <div class="flex gap-2">
+                        <input id="forgot-email" type="email" class="flex-1 px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="your@email.com">
+                        <button id="forgot-submit" class="bg-cta-500 hover:bg-cta-600 text-white font-bold px-4 rounded-lg text-sm">Send</button>
+                    </div>
+                </div>
+
+                <!-- Reset password (triggered by ?reset=TOKEN in URL) -->
+                <div id="reset-panel" class="hidden mt-4 p-4 border border-cta-200 dark:border-cta-900 bg-cta-50 dark:bg-cta-900/20 rounded-lg">
+                    <h4 class="text-sm font-bold mb-1">Choose a new password</h4>
+                    <div class="space-y-2">
+                        <input id="reset-password" type="password" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:ring-2 focus:ring-cta-500 outline-none" placeholder="New password (min 8 chars)">
+                        <button id="reset-submit" class="w-full bg-cta-500 hover:bg-cta-600 text-white font-bold py-2.5 rounded-lg text-sm">Reset password</button>
+                    </div>
+                </div>
+                <div id="login-success" class="hidden text-center text-green-600 dark:text-green-400 text-sm mt-3"><i class="fa-solid fa-check-circle mr-1"></i>Signed in successfully!</div>
+            </div>
+
+            <div id="register-tab" class="hidden bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 p-6">
+                <h3 class="font-bold text-lg mb-1">Create Account</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Join Fiad Shop today</p>
+                <form id="register-form" novalidate>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">First Name</label><input id="reg-first" type="text" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="John"></div>
+                            <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Last Name</label><input id="reg-last" type="text" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="Doe"></div>
+                        </div>
+                        <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Email</label><input id="reg-email" type="email" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="your@email.com"></div>
+                        <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Password</label><input id="reg-password" type="password" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="Min. 8 characters"></div>
+                        <div><label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Confirm Password</label><input id="reg-confirm" type="password" class="w-full px-3 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500" placeholder="Repeat password"></div>
+                        <label class="flex items-start gap-2 text-xs text-gray-500 cursor-pointer"><input id="reg-terms" type="checkbox" class="mt-0.5 accent-cta-500 w-3.5 h-3.5"> I agree to the <a href="terms.html" class="text-cta-500 hover:underline">Terms of Service</a> & <a href="privacy.html" class="text-cta-500 hover:underline">Privacy Policy</a></label>
+                        <button type="submit" id="register-submit" class="w-full py-3 bg-cta-500 hover:bg-cta-600 text-white rounded-lg text-sm font-bold transition shadow-lg shadow-cta-500/30"><i class="fa-solid fa-user-plus mr-2"></i>Create Account</button>
+                    </div>
+                </form>
+                <div id="register-success" class="hidden text-center text-green-600 dark:text-green-400 text-sm mt-3"><i class="fa-solid fa-check-circle mr-1"></i>Account created! Please sign in.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div><h4 class="font-bold text-sm mb-3"><span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP</h4><p class="text-[10px] text-gray-400 dark:text-gray-500 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p></div>
+                <div><h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4><ul class="space-y-1.5"><li><a href="about.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">About Us</a></li><li><a href="contact.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">Contact</a></li><li><a href="faq.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">FAQ</a></li><li><a href="products.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">Shop All</a></li></ul></div>
+                <div><h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4><ul class="space-y-1.5"><li><a href="privacy.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">Privacy Policy</a></li><li><a href="terms.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">Terms of Service</a></li><li><a href="contact.html" class="text-[10px] text-gray-400 hover:text-cta-500 transition">Support</a></li></ul></div>
+                <div><h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4><div class="flex gap-2"><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 hover:bg-cta-500 hover:text-white transition" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 hover:bg-cta-500 hover:text-white transition" aria-label="Twitter"><i class="fa-brands fa-twitter text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 hover:bg-cta-500 hover:text-white transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 hover:bg-cta-500 hover:text-white transition" aria-label="YouTube"><i class="fa-brands fa-youtube text-xs"></i></a></div></div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center"><p class="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p></div>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            function setTheme(t) { if (t === 'dark') { htmlElement.classList.add('dark'); themeIcon?.classList.replace('fa-moon', 'fa-sun'); } else { htmlElement.classList.remove('dark'); themeIcon?.classList.replace('fa-sun', 'fa-moon'); } localStorage.setItem('theme', t); }
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(htmlElement.classList.contains('dark') ? 'light' : 'dark'));
+            const st = localStorage.getItem('theme');
+            if (st === 'dark') setTheme('dark'); else if (st === 'light') setTheme('light');
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => { tab.addEventListener('click', function() { tabs.forEach(t => { t.classList.remove('active', 'text-cta-500', 'border-b-2', 'border-cta-500'); t.classList.add('text-gray-500', 'dark:text-gray-400'); }); this.classList.add('active', 'text-cta-500', 'border-b-2', 'border-cta-500'); const target = this.getAttribute('data-tab'); document.getElementById('login-tab').classList.toggle('hidden', target !== 'login'); document.getElementById('register-tab').classList.toggle('hidden', target !== 'register'); document.getElementById('login-success')?.classList.add('hidden'); document.getElementById('register-success')?.classList.add('hidden'); }); });
+
+            // ---- FIAD SHOP: real auth flows ---------------------------------------
+            // Use the shared FiadAuth from js/auth.js (attached later in body).
+            // We defer bind-time until DOMContentLoaded because this <script> runs
+            // *before* the shared bundle at the bottom of the page.
+            document.addEventListener('DOMContentLoaded', function () {
+                const { api, toast } = window.FiadAPI;
+                const A = window.FiadAuth;
+
+                // If already logged in, bounce to home.
+                if (A.isLoggedIn()) {
+                    toast('Already signed in — redirecting…', 'info');
+                    setTimeout(() => location.href = 'index.html', 700);
+                }
+
+                // If URL has ?reset=TOKEN, show reset panel.
+                const resetToken = new URLSearchParams(location.search).get('reset');
+                if (resetToken) {
+                    document.getElementById('reset-panel').classList.remove('hidden');
+                }
+
+                // ---------- LOGIN ----------
+                document.getElementById('login-form').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('login-email').value.trim();
+                    const password = document.getElementById('login-password').value;
+                    const twoFactorCode = document.getElementById('login-2fa').value.trim() || undefined;
+                    if (!email || !password) return toast('Enter email and password', 'warn');
+                    const btn = document.getElementById('login-submit');
+                    btn.disabled = true;
+                    const orig = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Signing in…';
+                    try {
+                        const res = await A.login(email, password, twoFactorCode);
+                        if (res.requires2FA) {
+                            document.getElementById('login-2fa-wrap').classList.remove('hidden');
+                            document.getElementById('login-2fa').focus();
+                            toast('Enter your 2FA code to continue', 'info');
+                            btn.disabled = false; btn.innerHTML = orig;
+                            return;
+                        }
+                        toast('Welcome back!', 'success');
+                        document.getElementById('login-success')?.classList.remove('hidden');
+                        setTimeout(() => location.href = 'index.html', 800);
+                    } catch (err) {
+                        btn.disabled = false; btn.innerHTML = orig;
+                        if (err.data?.code === 'NOT_VERIFIED') {
+                            document.getElementById('otp-panel').classList.remove('hidden');
+                            document.getElementById('otp-email').textContent = err.data.email || email;
+                            toast('Please verify your email first', 'warn');
+                        } else {
+                            toast(err.message || 'Login failed', 'error');
+                        }
+                    }
+                });
+
+                // ---------- REGISTER ----------
+                document.getElementById('register-form').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const first = document.getElementById('reg-first').value.trim();
+                    const last  = document.getElementById('reg-last').value.trim();
+                    const email = document.getElementById('reg-email').value.trim();
+                    const pw    = document.getElementById('reg-password').value;
+                    const pw2   = document.getElementById('reg-confirm').value;
+                    const agreed= document.getElementById('reg-terms').checked;
+                    if (!email || !pw)        return toast('Please fill all fields', 'warn');
+                    if (pw.length < 8)        return toast('Password must be at least 8 characters', 'warn');
+                    if (pw !== pw2)           return toast('Passwords don\'t match', 'warn');
+                    if (!agreed)              return toast('Please accept the Terms & Privacy Policy', 'warn');
+                    const btn = document.getElementById('register-submit');
+                    btn.disabled = true;
+                    const orig = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Creating…';
+                    try {
+                        const displayName = (first + ' ' + last).trim() || email.split('@')[0];
+                        await A.register(email, pw, displayName);
+                        // Switch to login tab & open OTP panel
+                        document.querySelector('[data-tab="login"]')?.click();
+                        document.getElementById('otp-panel').classList.remove('hidden');
+                        document.getElementById('otp-email').textContent = email;
+                        document.getElementById('login-email').value = email;
+                        toast('Check your email for a 6-digit code', 'success');
+                    } catch (err) {
+                        toast(err.message || 'Registration failed', 'error');
+                    } finally {
+                        btn.disabled = false; btn.innerHTML = orig;
+                    }
+                });
+
+                // ---------- OTP verify / resend ----------
+                document.getElementById('otp-submit').addEventListener('click', async () => {
+                    const email = document.getElementById('otp-email').textContent.trim() ||
+                                  document.getElementById('login-email').value.trim();
+                    const otp = document.getElementById('otp-input').value.trim();
+                    if (otp.length !== 6) return toast('Enter the 6-digit code', 'warn');
+                    try {
+                        await A.verifyOtp(email, otp);
+                        toast('Email verified — welcome!', 'success');
+                        setTimeout(() => location.href = 'index.html', 700);
+                    } catch (err) { toast(err.message || 'Verification failed', 'error'); }
+                });
+                document.getElementById('otp-resend').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('otp-email').textContent.trim() ||
+                                  document.getElementById('login-email').value.trim();
+                    if (!email) return toast('Enter your email first', 'warn');
+                    try { await A.resendOtp(email); toast('New code sent', 'success'); }
+                    catch (err) { toast(err.message || 'Could not resend', 'error'); }
+                });
+
+                // ---------- Forgot password ----------
+                document.getElementById('forgot-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('forgot-panel').classList.toggle('hidden');
+                    document.getElementById('forgot-email').value = document.getElementById('login-email').value;
+                });
+                document.getElementById('forgot-submit').addEventListener('click', async () => {
+                    const email = document.getElementById('forgot-email').value.trim();
+                    if (!email) return toast('Enter your email', 'warn');
+                    try {
+                        await A.forgotPassword(email);
+                        toast('If that email exists, a reset link was sent', 'success');
+                    } catch (err) { toast(err.message || 'Could not send', 'error'); }
+                });
+
+                // ---------- Reset password (?reset=…) ----------
+                document.getElementById('reset-submit').addEventListener('click', async () => {
+                    const pw = document.getElementById('reset-password').value;
+                    if (pw.length < 8) return toast('Password must be at least 8 characters', 'warn');
+                    try {
+                        await A.resetPassword(resetToken, pw);
+                        toast('Password reset — please log in', 'success');
+                        document.getElementById('reset-panel').classList.add('hidden');
+                        history.replaceState({}, '', 'login.html');
+                    } catch (err) { toast(err.message || 'Reset failed', 'error'); }
+                });
+            });
+
+            function showToast(msg) { const c = document.getElementById('toast-container'); if (!c) return; const t = document.createElement('div'); t.className = 'toast bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg px-4 py-3 flex items-center gap-2 text-sm'; t.innerHTML = '<i class="fa-solid fa-check-circle text-green-500"></i><span>' + msg + '</span>'; c.appendChild(t); setTimeout(() => t.remove(), 3000); }
+            function updateCart() { const el = document.getElementById('cart-count'); try { const items = JSON.parse(localStorage.getItem('fiad_cart') || '[]'); if (el) el.textContent = items.reduce((s, i) => s + (i.quantity || 1), 0); } catch(e) {} }
+            updateCart();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

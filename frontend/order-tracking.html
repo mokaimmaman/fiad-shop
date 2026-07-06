@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracking - Fiad Shop</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { cta: { 50: '#fff7ed', 500: '#f97316', 600: '#ea580c', 700: '#c2410c' } } } } }</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .toast { animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateX(100%); } }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold"><span class="text-cta-500 dark:text-cta-400">FIAD</span><span class="text-gray-900 dark:text-white">SHOP</span></a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 pb-1">Home</a>
+                <a href="products.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 pb-1">Products</a>
+                <a href="about.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 pb-1">About</a>
+                <a href="contact.html" class="text-gray-600 dark:text-gray-400 hover:text-cta-500 pb-1">Contact</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600"><i class="fa-solid fa-bars text-sm"></i></button>
+                <a href="login.html" class="hidden md:block text-gray-600 dark:text-gray-400 hover:text-cta-500"><i class="fa-regular fa-user text-lg"></i></a>
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative"><i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span></a>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-zinc-950 border-t border-gray-200 px-4 py-3 space-y-2">
+            <a href="index.html" class="block py-2 text-gray-600">Home</a><a href="products.html" class="block py-2 text-gray-600">Products</a><a href="cart.html" class="block py-2 text-gray-600">Cart</a>
+        </div>
+    </nav>
+
+    <div class="bg-gradient-to-r from-cta-500 to-cta-700 py-8 px-3 text-white text-center">
+        <div class="container mx-auto"><h1 class="text-2xl md:text-3xl font-bold"><i class="fa-solid fa-truck mr-2"></i>Order Tracking</h1><p class="text-sm text-cta-100 mt-2">Track your orders in real-time</p></div>
+    </div>
+
+    <section class="py-8 px-3">
+        <div class="container mx-auto max-w-3xl">
+            <div class="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 p-4 mb-6">
+                <h3 class="font-bold text-sm mb-3">Track an Order</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2">
+                    <input type="text" id="track-order-input" placeholder="Order # (e.g. FS-XXXX-XXXX)" class="px-4 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-gray-50 dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500">
+                    <input type="email" id="track-order-email" placeholder="Email (guest orders only)" class="px-4 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-gray-50 dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-cta-500">
+                    <button id="track-order-btn" class="px-5 py-2.5 bg-cta-500 hover:bg-cta-600 text-white rounded-lg text-sm font-bold transition"><i class="fa-solid fa-search mr-1"></i>Track</button>
+                </div>
+                <p id="track-error" class="text-xs text-red-500 mt-2 hidden"></p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-2">Signed in? We'll show your recent orders automatically below.</p>
+            </div>
+
+            <div class="flex items-center justify-between mb-4"><h2 class="text-lg font-bold">Your Order History</h2></div>
+            <div id="orders-container" class="space-y-3">
+                <div id="no-orders" class="text-center py-10 bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800">
+                    <i class="fa-solid fa-receipt text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">No orders yet</p>
+                    <a href="products.html" class="text-sm text-cta-500 hover:underline font-medium">Start Shopping</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="order-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-3">
+        <div class="bg-white dark:bg-zinc-900 rounded-xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-5">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-sm">Order Details</h3>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div><h4 class="font-bold text-sm mb-3"><span class="text-cta-500">FIAD</span>SHOP</h4><p class="text-[10px] text-gray-400 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p></div>
+                <div><h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4><ul class="space-y-1.5"><li><a href="about.html" class="text-[10px] text-gray-400 hover:text-cta-500">About Us</a></li><li><a href="contact.html" class="text-[10px] text-gray-400 hover:text-cta-500">Contact</a></li><li><a href="faq.html" class="text-[10px] text-gray-400 hover:text-cta-500">FAQ</a></li></ul></div>
+                <div><h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4><ul class="space-y-1.5"><li><a href="privacy.html" class="text-[10px] text-gray-400 hover:text-cta-500">Privacy Policy</a></li><li><a href="terms.html" class="text-[10px] text-gray-400 hover:text-cta-500">Terms of Service</a></li></ul></div>
+                <div><h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4><div class="flex gap-2"><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 hover:bg-cta-500 hover:text-white transition"><i class="fa-brands fa-facebook-f text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 hover:bg-cta-500 hover:text-white transition"><i class="fa-brands fa-twitter text-xs"></i></a></div></div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center"><p class="text-gray-400 dark:text-gray-500 text-[10px]">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p></div>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] space-y-2"></div>
+
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            function setTheme(t) { if (t === 'dark') { htmlElement.classList.add('dark'); themeIcon?.classList.replace('fa-moon', 'fa-sun'); } else { htmlElement.classList.remove('dark'); themeIcon?.classList.replace('fa-sun', 'fa-moon'); } localStorage.setItem('theme', t); }
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(htmlElement.classList.contains('dark') ? 'light' : 'dark'));
+            const st = localStorage.getItem('theme');
+            if (st === 'dark') setTheme('dark'); else if (st === 'light') setTheme('light');
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+            document.getElementById('mobile-menu-toggle')?.addEventListener('click', function() { document.getElementById('mobile-menu')?.classList.toggle('hidden'); });
+
+            function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m); }
+            function getOrders() { try { return JSON.parse(localStorage.getItem('fiad_orders') || '[]'); } catch(e) { return []; } }
+
+            const statuses = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+            const statusIcons = ['fa-clock', 'fa-spinner', 'fa-truck', 'fa-check-circle'];
+            const statusColors = ['text-yellow-500', 'text-blue-500', 'text-cta-500', 'text-green-500'];
+
+            function getStatusIndex(status) { const idx = statuses.indexOf(status); return idx >= 0 ? idx : 0; }
+
+            function renderOrders() {
+                const container = document.getElementById('orders-container');
+                const noOrders = document.getElementById('no-orders');
+                const orders = getOrders();
+                if (!orders || orders.length === 0) { container.innerHTML = ''; container.appendChild(noOrders); return; }
+                container.innerHTML = orders.map(order => {
+                    const statusIdx = getStatusIndex(order.status);
+                    const itemCount = (order.items || []).reduce((s, i) => s + (i.quantity || 1), 0);
+                    return '<div class="bg-white dark:bg-zinc-900 rounded-lg border border-gray-200 dark:border-zinc-800 p-4 cursor-pointer hover:border-cta-500 transition order-card" data-id="' + escapeHtml(order.id) + '"><div class="flex justify-between items-start mb-2"><div><p class="text-xs text-gray-400">Order #' + escapeHtml(order.id) + '</p><p class="text-xs text-gray-500">' + new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) + '</p></div><div class="flex items-center gap-1"><i class="fa-solid ' + statusIcons[statusIdx] + ' ' + statusColors[statusIdx] + ' text-xs"></i><span class="text-xs font-medium ' + statusColors[statusIdx] + '">' + order.status + '</span></div></div><div class="flex justify-between text-sm"><span>' + itemCount + ' item(s)</span><span class="font-bold text-cta-600 dark:text-cta-400">$' + (order.total || 0).toFixed(2) + '</span></div></div>';
+                }).join('');
+                document.querySelectorAll('.order-card').forEach(card => { card.addEventListener('click', function() { const id = this.getAttribute('data-id'); const orders = getOrders(); const order = orders.find(o => o.id === id); if (order) showOrderModal(order); }); });
+            }
+
+            function showOrderModal(order) {
+                const modal = document.getElementById('order-modal');
+                const content = document.getElementById('modal-content');
+                const statusIdx = getStatusIndex(order.status);
+                const statusHTML = statuses.map((s, i) => '<div class="flex items-center gap-3 ' + (i <= statusIdx ? 'text-green-600 dark:text-green-400' : 'text-gray-400') + '"><div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ' + (i <= statusIdx ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300') + '">' + (i < statusIdx ? '<i class="fa-solid fa-check text-[10px]"></i>' : '<i class="fa-solid ' + statusIcons[i] + ' text-[10px]"></i>') + '</div><span class="text-xs font-medium">' + s + '</span></div>').join('');
+                content.innerHTML = '<div class="mb-4"><p class="text-xs text-gray-400">Order #' + escapeHtml(order.id) + '</p><p class="text-xs text-gray-500">' + new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) + '</p></div><div class="mb-4 bg-gray-50 dark:bg-zinc-800 rounded-lg p-3 space-y-2"><h4 class="text-xs font-medium mb-1">Order Status</h4>' + statusHTML + '</div><div class="mb-4"><h4 class="text-xs font-medium mb-2">Items</h4>' + (order.items || []).map(item => '<div class="flex justify-between text-xs py-1 border-b border-gray-100 dark:border-zinc-800"><span>' + escapeHtml(item.name) + ' x' + (item.quantity || 1) + '</span><span>$' + ((item.price || 0) * (item.quantity || 1)).toFixed(2) + '</span></div>').join('') + '</div><div class="border-t border-gray-200 dark:border-zinc-700 pt-2"><div class="flex justify-between text-sm font-bold"><span>Total</span><span class="text-cta-600 dark:text-cta-400">$' + (order.total || 0).toFixed(2) + '</span></div></div>';
+                modal.classList.remove('hidden');
+                document.getElementById('close-modal')?.addEventListener('click', () => modal.classList.add('hidden'));
+                modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+            }
+
+            // ---- FIAD SHOP: real order tracking via API ---------------------------
+            function _mapApiOrder(o) {
+                return {
+                    id: o.orderNumber,
+                    total: Number(o.total),
+                    date: o.createdAt || new Date().toISOString(),
+                    status: _statusLabel(o.status),
+                    items: (o.items || []).map(i => ({
+                        name: i.name, price: Number(i.unitPrice || i.lineTotal || 0), quantity: i.quantity,
+                    })),
+                    trackingNumber: o.trackingNumber,
+                    trackingCarrier: o.trackingCarrier,
+                };
+            }
+            function _statusLabel(s) {
+                const m = {
+                    PENDING:'Pending', PAID:'Paid', APPROVED:'Approved',
+                    SHIPPED:'Shipped', DELIVERED:'Delivered',
+                    REJECTED:'Rejected', CANCELLED:'Cancelled', REFUNDED:'Refunded',
+                };
+                return m[s] || s;
+            }
+
+            async function trackOne() {
+                const input = document.getElementById('track-order-input');
+                const emailInput = document.getElementById('track-order-email');
+                const error = document.getElementById('track-error');
+                const val = input.value.trim();
+                if (!val) { error.textContent = 'Please enter an order number'; error.classList.remove('hidden'); return; }
+                try {
+                    const qs = emailInput.value.trim() ? '?email=' + encodeURIComponent(emailInput.value.trim()) : '';
+                    const { order } = await window.FiadAPI.api.get('/orders/' + encodeURIComponent(val) + '/track' + qs);
+                    error.classList.add('hidden');
+                    showOrderModal(_mapApiOrder(order));
+                } catch (e) {
+                    error.textContent = e.message || 'Order not found.';
+                    error.classList.remove('hidden');
+                }
+            }
+            document.getElementById('track-order-btn')?.addEventListener('click', trackOne);
+            document.getElementById('track-order-input')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') trackOne(); });
+
+            // Auto-load "my orders" if user is logged in.
+            document.addEventListener('DOMContentLoaded', async () => {
+                if (!window.FiadAuth?.isLoggedIn()) {
+                    // Also pre-fill from ?order=… (post-payment redirect)
+                    const params = new URLSearchParams(location.search);
+                    const preOrder = params.get('order');
+                    const preEmail = params.get('email');
+                    if (preOrder) {
+                        document.getElementById('track-order-input').value = preOrder;
+                        if (preEmail) document.getElementById('track-order-email').value = preEmail;
+                        trackOne();
+                    }
+                    return;
+                }
+                try {
+                    const { orders } = await window.FiadAPI.api.get('/orders/mine');
+                    if (!orders || !orders.length) return;
+                    // Merge into the localStorage list so the existing renderer works verbatim.
+                    const local = getOrders();
+                    orders.forEach(o => {
+                        const mapped = _mapApiOrder(o);
+                        if (!local.find(l => l.id === mapped.id)) local.unshift(mapped);
+                    });
+                    localStorage.setItem('fiad_orders', JSON.stringify(local));
+                    renderOrders();
+                } catch (e) { console.warn('[my-orders]', e.message); }
+            });
+
+            function updateCart() { const el = document.getElementById('cart-count'); try { const c = JSON.parse(localStorage.getItem('fiad_cart') || '[]'); if (el) el.textContent = c.reduce((s, i) => s + (i.quantity || 1), 0); } catch(e) {} }
+            updateCart();
+
+            renderOrders();
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>FAQ - Fiad Shop</title>
+    <meta name="description" content="Frequently asked questions about Fiad Shop - shipping, returns, payments, and more.">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { cta: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74', 400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c', 800: '#9a3412', 900: '#7c2d12' } } } } }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .faq-answer.open { max-height: 300px; }
+    </style>
+</head>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <nav class="bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-zinc-800 shadow-sm">
+        <div class="container mx-auto px-3 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold"><span class="text-cta-500 dark:text-cta-400">FIAD</span><span class="text-gray-900 dark:text-white">SHOP</span></a>
+            <div class="flex items-center gap-3">
+                <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-cta-400 transition hover:scale-105"><i id="theme-icon" class="fa-solid fa-moon text-sm"></i></button>
+                <div data-fiad-menu class="inline-flex"></div>
+                <a href="cart.html" class="relative"><i class="fa-solid fa-cart-shopping text-xl text-gray-700 dark:text-gray-300"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-cta-500 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">0</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-gray-50 dark:bg-zinc-900 py-6 px-3 border-b border-gray-200 dark:border-zinc-800 text-center">
+        <div class="container mx-auto">
+            <h1 class="text-xl font-bold">Frequently Asked Questions</h1>
+            <p class="text-xs text-gray-500 mt-1">Everything you need to know about Fiad Shop</p>
+        </div>
+    </div>
+
+    <section class="py-6 px-3">
+        <div class="container mx-auto max-w-2xl space-y-2">
+
+            <!-- 1. How does shipping work? -->
+            <div class="faq-item bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg">
+                <button class="faq-question w-full text-left px-4 py-3 flex justify-between items-center text-sm font-medium hover:text-cta-500 transition">
+                    <span>How does shipping work?</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition"></i>
+                </button>
+                <div class="faq-answer px-4">
+                    <p class="pb-3 text-sm text-gray-600 dark:text-gray-400">We offer standard (5-7 days, free over $50), express (2-3 days, $9.99), and overnight (1 day, $19.99) shipping. All packages are tracked and insured.</p>
+                </div>
+            </div>
+
+            <!-- 2. What is your return policy? (Updated with CJ-like policy) -->
+            <div class="faq-item bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg">
+                <button class="faq-question w-full text-left px-4 py-3 flex justify-between items-center text-sm font-medium hover:text-cta-500 transition">
+                    <span>What is your return policy?</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition"></i>
+                </button>
+                <div class="faq-answer px-4">
+                    <p class="pb-3 text-sm text-gray-600 dark:text-gray-400">Returns are accepted only for damaged, wrong, or missing items. Disputes must be opened within 30 days of delivery with photo or video proof. Buyer covers return shipping to our China warehouse. Change-of-mind returns are not accepted.</p>
+                </div>
+            </div>
+
+            <!-- 3. Is my payment information secure? -->
+            <div class="faq-item bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg">
+                <button class="faq-question w-full text-left px-4 py-3 flex justify-between items-center text-sm font-medium hover:text-cta-500 transition">
+                    <span>Is my payment information secure?</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition"></i>
+                </button>
+                <div class="faq-answer px-4">
+                    <p class="pb-3 text-sm text-gray-600 dark:text-gray-400">Absolutely. All transactions are encrypted with SSL/TLS 256-bit encryption. We never store your full credit card details. Your security is our top priority.</p>
+                </div>
+            </div>
+
+            <!-- 4. How can I track my order? (UNTOUCHED) -->
+            <div class="faq-item bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg">
+                <button class="faq-question w-full text-left px-4 py-3 flex justify-between items-center text-sm font-medium hover:text-cta-500 transition">
+                    <span>How can I track my order?</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition"></i>
+                </button>
+                <div class="faq-answer px-4">
+                    <p class="pb-3 text-sm text-gray-600 dark:text-gray-400">Once your order ships, you'll receive an email with a tracking number. You can also track your order from your account dashboard.</p>
+                </div>
+            </div>
+
+            <!-- 5. Do you offer international shipping? (Updated with CJ-like country list) -->
+            <div class="faq-item bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg">
+                <button class="faq-question w-full text-left px-4 py-3 flex justify-between items-center text-sm font-medium hover:text-cta-500 transition">
+                    <span>Do you offer international shipping?</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition"></i>
+                </button>
+                <div class="faq-answer px-4">
+                    <p class="pb-3 text-sm text-gray-600 dark:text-gray-400">We ship to over 200 countries. Delivery time is 7-15 business days from China. Faster shipping is available from our warehouses in the US, Germany, UK, France, Thailand, Indonesia, and more. Not all products are stocked locally.</p>
+                </div>
+            </div>
+
+            <!-- 6. Can I change or cancel my order? (UNTOUCHED) -->
+            <div class="faq-item bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg">
+                <button class="faq-question w-full text-left px-4 py-3 flex justify-between items-center text-sm font-medium hover:text-cta-500 transition">
+                    <span>Can I change or cancel my order?</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 transition"></i>
+                </button>
+                <div class="faq-answer px-4">
+                    <p class="pb-3 text-sm text-gray-600 dark:text-gray-400">You can modify or cancel your order within 1 hour of placing it. After that, please contact our support team for assistance.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-zinc-800 py-8">
+        <div class="container mx-auto px-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h4 class="font-bold text-sm mb-3">
+                        <span class="text-cta-500 dark:text-cta-400">FIAD</span>SHOP
+                    </h4>
+                    <p class="text-[10px] text-gray-400 dark:text-gray-500 leading-relaxed">Privacy, Excellence, Personalization & Direct Pricing — all in one.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Quick Links</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="about.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">About Us</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Contact</a></li>
+                        <li><a href="faq.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">FAQ</a></li>
+                        <li><a href="products.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Shop All</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Customer Service</h4>
+                    <ul class="space-y-1.5">
+                        <li><a href="privacy.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Terms of Service</a></li>
+                        <li><a href="contact.html" class="text-[10px] text-gray-400 dark:text-gray-500 hover:text-cta-500 dark:hover:text-cta-400 transition">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-xs mb-3 text-gray-700 dark:text-gray-300">Follow Us</h4>
+                    <div class="flex gap-2">
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Facebook"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Twitter"><i class="fa-brands fa-twitter text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-cta-500 hover:text-white dark:hover:bg-cta-500 transition" aria-label="YouTube"><i class="fa-brands fa-youtube text-xs"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-zinc-800 pt-4 text-center">
+                <p class="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs">&copy; 2026 Fiad Shop. All transactions are encrypted &amp; secure.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const html = document.documentElement;
+
+            function setTheme(t) {
+                if (t === 'dark') {
+                    html.classList.add('dark');
+                    themeIcon?.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    html.classList.remove('dark');
+                    themeIcon?.classList.replace('fa-sun', 'fa-moon');
+                }
+                localStorage.setItem('theme', t);
+            }
+
+            if (toggleBtn) toggleBtn.addEventListener('click', () => setTheme(html.classList.contains('dark') ? 'light' : 'dark'));
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') setTheme('dark');
+            else if (saved === 'light') setTheme('light');
+            else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+            document.getElementById('cart-count').textContent = (JSON.parse(localStorage.getItem('secure_cart') || '[]')).reduce((s, i) => s + i.quantity, 0);
+
+            // FAQ accordion
+            document.querySelectorAll('.faq-question').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    const isOpen = answer.classList.contains('open');
+
+                    document.querySelectorAll('.faq-answer.open').forEach(a => a.classList.remove('open'));
+                    document.querySelectorAll('.faq-question i').forEach(i => i.classList.remove('rotate-180'));
+
+                    if (!isOpen) {
+                        answer.classList.add('open');
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+
+        })();
+    </script>
+
+    <!-- ===== FIAD SHOP SHARED BUNDLE (api + auth + ui, includes logo, 3-dot menu, floating AI bot, live support) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/support-chat.js"></script>
+</body>
+</html>
