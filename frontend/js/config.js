@@ -13,5 +13,5 @@
 window.FIAD_CONFIG = {
   // Full base URL of your backend, including "/api". No trailing slash.
   // Example: 'https://fiad-shop-backend.vercel.app/api'
-  API_BASE: 'https://fiad-shop.vercel.app/api', // ← set this before deploying to GitHub Pages
+  API_BASE: 'https://fiad-shop.vercel.app', // ← set this before deploying to GitHub Pages
 };
