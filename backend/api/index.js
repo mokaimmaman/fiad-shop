@@ -1,8 +1,7 @@
 // Fiad Shop — Express entrypoint.
 // Designed to run on Vercel serverless AND as a normal Node process locally.
 
-require('dotenv').config({ path: '.env.local' });
-require('dotenv').config(); // fallback to .env
+require('dotenv').config(); // Load .env from root (works locally and on Vercel)
 
 const express = require('express');
 const cors = require('cors');
@@ -10,16 +9,17 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 
-const authRoutes      = require('./routes/auth');
-const adminRoutes     = require('./routes/admin');
-const affiliateRoutes = require('./routes/affiliate');
-const orderRoutes     = require('./routes/orders');
-const paymentRoutes   = require('./routes/payment');
-const feedbackRoutes  = require('./routes/feedback');
-const aiRoutes        = require('./routes/ai');
-const supportRoutes   = require('./routes/support');
-const productRoutes   = require('./routes/products');
-const settingRoutes   = require('./routes/settings');
+// FIXED: All routes now point to ../src/routes/ (since this file is in api/)
+const authRoutes      = require('../src/routes/auth');
+const adminRoutes     = require('../src/routes/admin');
+const affiliateRoutes = require('../src/routes/affiliate');
+const orderRoutes     = require('../src/routes/orders');
+const paymentRoutes   = require('../src/routes/payment');
+const feedbackRoutes  = require('../src/routes/feedback');
+const aiRoutes        = require('../src/routes/ai');
+const supportRoutes   = require('../src/routes/support');
+const productRoutes   = require('../src/routes/products');
+const settingRoutes   = require('../src/routes/settings');
 
 const app = express();
 
@@ -34,9 +34,8 @@ const allowedOrigins = (process.env.CORS_ORIGINS || '')
 
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow same-origin/no-origin (curl, mobile) and any whitelisted origin.
     if (!origin) return cb(null, true);
-    if (allowedOrigins.length === 0) return cb(null, true); // dev-mode fallback
+    if (allowedOrigins.length === 0) return cb(null, true);
     if (allowedOrigins.some(o => origin === o || origin.startsWith(o))) {
       return cb(null, true);
     }
@@ -46,8 +45,6 @@ app.use(cors({
 }));
 
 // ---- Body parsers -----------------------------------------------------------
-// Payment webhooks need the raw body for signature verification, so mount
-// the webhook route BEFORE express.json() with a raw parser.
 app.use('/api/payment/webhook',
   express.raw({ type: '*/*', limit: '2mb' })
 );
@@ -59,7 +56,7 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// ---- Global rate limit (per-IP) --------------------------------------------
+// ---- Global rate limit ------------------------------------------------------
 const globalLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 200,
@@ -98,7 +95,6 @@ app.use((req, res) => {
 });
 
 // ---- Error handler ----------------------------------------------------------
-// eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   console.error('[ERROR]', err);
   const status = err.status || 500;
